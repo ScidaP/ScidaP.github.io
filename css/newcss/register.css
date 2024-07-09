@@ -1,0 +1,18 @@
+.registration-section{
+	width: 90%;
+	padding-left: 5%;
+	padding-right: 5%;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.needs-validation{
+	width: 100%;
+}
+
+@media (max-width: 550px) {
+	.registration-section{
+		width: 100%;
+		padding: 0;
+	}
+}

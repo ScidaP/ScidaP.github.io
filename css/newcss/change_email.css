@@ -1,0 +1,17 @@
+.verificación-email-form{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	gap: 5px;
+}
+
+.card{
+	gap: 10px;
+}
+
+.form-group{
+	gap: 10px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 0px;
+}
