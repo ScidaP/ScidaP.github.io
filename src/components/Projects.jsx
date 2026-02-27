@@ -30,7 +30,7 @@ export default function Projects() {
         {/* Intro */}
         <div className="mb-14">
           <h1 className="text-5xl font-bold text-stone-900 mb-3 tracking-tight">
-            ScidaP
+            Patricio Scidá
           </h1>
           <p className="text-stone-500 text-sm leading-relaxed max-w-lg">
             Programador Universitario (UNT) · Licenciatura en Informática (UNT) · Diplomado en Peritaje Informático y Forensia Digital (UNT)

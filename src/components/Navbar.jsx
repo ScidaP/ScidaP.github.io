@@ -22,7 +22,7 @@ export default function Navbar() {
     >
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
         <a href="#" className="text-stone-900 font-semibold text-base tracking-tight">
-          ScidaP
+          Patricio Scidá
         </a>
 
         <div className="hidden md:flex items-center gap-7">
@@ -31,6 +31,12 @@ export default function Navbar() {
             className="text-stone-500 hover:text-stone-900 text-sm font-medium transition-colors"
           >
             Proyectos
+          </a>
+          <a
+            href="#experience"
+            className="text-stone-500 hover:text-stone-900 text-sm font-medium transition-colors"
+          >
+            Experiencia
           </a>
           <a
             href="#contact"
@@ -57,6 +63,13 @@ export default function Navbar() {
             onClick={() => setMobileOpen(false)}
           >
             Proyectos
+          </a>
+          <a
+            href="#experience"
+            className="text-stone-600 text-sm font-medium"
+            onClick={() => setMobileOpen(false)}
+          >
+            Experiencia
           </a>
           <a
             href="#contact"
