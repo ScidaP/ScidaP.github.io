@@ -29,15 +29,11 @@ export default function Projects() {
 
         {/* Intro */}
         <div className="mb-14">
-          <div className="inline-flex items-center gap-2 text-xs text-stone-500 bg-white border border-stone-200 px-3 py-1 rounded-full mb-5 shadow-sm">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-            Disponible para proyectos
-          </div>
-          <h1 className="text-5xl font-bold text-stone-900 mb-2 tracking-tight">
+          <h1 className="text-5xl font-bold text-stone-900 mb-3 tracking-tight">
             ScidaP
           </h1>
-          <p className="text-stone-500 text-lg">
-            Desarrollador Full Stack
+          <p className="text-stone-500 text-sm leading-relaxed max-w-lg">
+            Programador Universitario (UNT) · Licenciatura en Informática (UNT) · Diplomado en Peritaje Informático y Forensia Digital (UNT)
           </p>
         </div>
 
