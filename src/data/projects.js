@@ -7,6 +7,7 @@ export const projects = [
     category: 'web',
     github: 'https://github.com/ScidaP/BarMaster',
     demo: null,
+    devTime: '+2 años',
     images: [
       '/img/sistema_bares/2dcdb433176efc9a3ecdcf02c82638de.png',
       '/img/sistema_bares/4d83b7f38e6b57c2846f7e4e203d6fbf.png',
@@ -23,6 +24,7 @@ export const projects = [
     category: 'desktop',
     github: 'https://github.com/ScidaP/gpu-remote-access',
     demo: null,
+    devTime: '1 mes',
     images: [
       '/img/gpu-remote-access/0be4eb955abd62aa62e5cd35533ba4e9.png',
       '/img/gpu-remote-access/453293f0f156329ff377ebb262a261f0.png',
@@ -37,21 +39,12 @@ export const projects = [
     category: 'web',
     github: 'https://github.com/ScidaP/db-user-interface',
     demo: null,
+    devTime: '1 año y 2 meses',
     images: [
       '/img/sistema_obras/c676d378885a75765e55e48902103789.png',
       '/img/sistema_obras/d0572959932bdac7e324447c547ad8b1.png',
       '/img/sistema_obras/e2b5fad2cb7d8cf1f783b45d5e0c74f4.png',
     ],
-  },
-  {
-    id: 4,
-    title: 'Fitness website',
-    description: '',
-    tags: [],
-    category: 'web',
-    github: '#',
-    demo: null,
-    images: [],
   },
   {
     id: 5,

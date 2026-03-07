@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Github, ExternalLink, FolderOpen, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { Github, ExternalLink, FolderOpen, ChevronLeft, ChevronRight, X, Clock } from 'lucide-react'
 import { projects } from '../data/projects'
 
 const tagColors = {
@@ -132,28 +132,36 @@ function ProjectModal({ project, onClose }) {
             ))}
           </div>
 
-          <div className="flex gap-4 pt-4 border-t border-stone-100">
-            {project.github && project.github !== '#' && (
-              <a
-                href={project.github}
-                className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Github size={13} />
-                Código
-              </a>
-            )}
-            {project.demo && (
-              <a
-                href={project.demo}
-                className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ExternalLink size={13} />
-                Demo
-              </a>
+          <div className="flex items-center justify-between pt-4 border-t border-stone-100">
+            <div className="flex gap-4">
+              {project.github && project.github !== '#' && (
+                <a
+                  href={project.github}
+                  className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Github size={13} />
+                  Código
+                </a>
+              )}
+              {project.demo && (
+                <a
+                  href={project.demo}
+                  className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={13} />
+                  Demo
+                </a>
+              )}
+            </div>
+            {project.devTime && (
+              <span className="flex items-center gap-1 text-[11px] text-stone-400">
+                <Clock size={11} />
+                {project.devTime}
+              </span>
             )}
           </div>
         </div>
@@ -212,30 +220,38 @@ export default function Projects() {
                   ))}
                 </div>
 
-                <div className="flex gap-4 pt-3.5 border-t border-stone-100">
-                  {project.github && project.github !== '#' && (
-                    <a
-                      href={project.github}
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Github size={13} />
-                      Código
-                    </a>
-                  )}
-                  {project.demo && (
-                    <a
-                      href={project.demo}
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink size={13} />
-                      Demo
-                    </a>
+                <div className="flex items-center justify-between pt-3.5 border-t border-stone-100">
+                  <div className="flex gap-4">
+                    {project.github && project.github !== '#' && (
+                      <a
+                        href={project.github}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Github size={13} />
+                        Código
+                      </a>
+                    )}
+                    {project.demo && (
+                      <a
+                        href={project.demo}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink size={13} />
+                        Demo
+                      </a>
+                    )}
+                  </div>
+                  {project.devTime && (
+                    <span className="flex items-center gap-1 text-[11px] text-stone-400">
+                      <Clock size={11} />
+                      {project.devTime}
+                    </span>
                   )}
                 </div>
               </div>
