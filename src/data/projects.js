@@ -56,9 +56,7 @@ export const projects = [
     demo: 'https://scidap.github.io',
     devTime: 'En progreso',
     images: [
-      '/img/portfolio/1.png',
-      '/img/portfolio/2.png',
-      '/img/portfolio/3.png',
+      '/img/portfolio/40a75dade6438784404054f1443560e9.png',
     ],
   },
   {
