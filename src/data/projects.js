@@ -14,7 +14,6 @@ export const projects = [
       '/img/sistema_bares/4d83b7f38e6b57c2846f7e4e203d6fbf.png',
       '/img/sistema_bares/d30d418f75bb5b6814fc6d205126e10c.png',
       '/img/sistema_bares/f05c64bd16390013a7615d43e1b5d780.png',
-      '/img/sistema_bares/a2c924f172027e52152605a1e5bfb657.png',
     ],
   },
   {
