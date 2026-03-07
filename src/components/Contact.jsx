@@ -6,18 +6,21 @@ const socialLinks = [
     label: 'GitHub',
     href: 'https://github.com/ScidaP',
     username: '@ScidaP',
+    iconClass: 'text-stone-900',
   },
   {
     icon: Linkedin,
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/in/patricio-scid%C3%A1-63ab091ba/',
     username: 'Patricio Scidá',
+    iconClass: 'text-blue-600',
   },
   {
     icon: Mail,
     label: 'Email',
-    href: 'mailto:tu@email.com',
-    username: 'tu@email.com',
+    href: 'mailto:scidapatricio@gmail.com',
+    username: 'scidapatricio@gmail.com',
+    iconClass: 'text-stone-500',
   },
 ]
 
@@ -31,11 +34,11 @@ export default function Contact() {
         </p>
 
         <h2 className="text-2xl font-semibold text-stone-900 mb-8 tracking-tight">
-          Encuéntrame en
+          Encontrame en
         </h2>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          {socialLinks.map(({ icon: Icon, label, href, username }) => (
+          {socialLinks.map(({ icon: Icon, label, href, username, iconClass }) => (
             <a
               key={label}
               href={href}
@@ -44,7 +47,7 @@ export default function Contact() {
               rel="noopener noreferrer"
             >
               <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-stone-100 group-hover:bg-stone-200 transition-colors">
-                <Icon size={15} className="text-stone-500" />
+                <Icon size={15} className={iconClass} />
               </div>
               <div>
                 <div className="text-stone-800 font-medium text-sm">{label}</div>
