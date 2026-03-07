@@ -6,14 +6,16 @@ const socialLinks = [
     label: 'GitHub',
     href: 'https://github.com/ScidaP',
     username: '@ScidaP',
-    iconClass: 'text-stone-900',
+    iconClass: 'text-white',
+    bgClass: 'bg-stone-900 group-hover:bg-stone-700',
   },
   {
     icon: Linkedin,
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/in/patricio-scid%C3%A1-63ab091ba/',
     username: 'Patricio Scidá',
-    iconClass: 'text-blue-600',
+    iconClass: 'text-white',
+    bgClass: 'bg-blue-600 group-hover:bg-blue-500',
   },
   {
     icon: Mail,
@@ -21,6 +23,7 @@ const socialLinks = [
     href: 'mailto:scidapatricio@gmail.com',
     username: 'scidapatricio@gmail.com',
     iconClass: 'text-stone-500',
+    bgClass: 'bg-stone-100 group-hover:bg-stone-200',
   },
 ]
 
@@ -38,7 +41,7 @@ export default function Contact() {
         </h2>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          {socialLinks.map(({ icon: Icon, label, href, username, iconClass }) => (
+          {socialLinks.map(({ icon: Icon, label, href, username, iconClass, bgClass }) => (
             <a
               key={label}
               href={href}
@@ -46,7 +49,7 @@ export default function Contact() {
               target={href.startsWith('http') ? '_blank' : undefined}
               rel="noopener noreferrer"
             >
-              <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-stone-100 group-hover:bg-stone-200 transition-colors">
+              <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${bgClass}`}>
                 <Icon size={15} className={iconClass} />
               </div>
               <div>
