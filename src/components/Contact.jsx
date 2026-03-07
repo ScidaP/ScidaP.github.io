@@ -10,8 +10,8 @@ const socialLinks = [
   {
     icon: Linkedin,
     label: 'LinkedIn',
-    href: '#',
-    username: 'ScidaP',
+    href: 'https://www.linkedin.com/in/patricio-scid%C3%A1-63ab091ba/',
+    username: 'Patricio Scidá',
   },
   {
     icon: Mail,
