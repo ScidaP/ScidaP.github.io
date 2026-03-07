@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Github, ExternalLink, FolderOpen, ChevronLeft, ChevronRight, X, Clock } from 'lucide-react'
 import { projects } from '../data/projects'
 
@@ -37,11 +37,23 @@ function getTagColor(tag) {
 
 function Carousel({ images, large = false }) {
   const [current, setCurrent] = useState(0)
-  const height = large ? 'h-80' : 'h-40'
+  const touchStartX = useRef(null)
+  const height = large ? 'h-56 sm:h-80' : 'h-40'
+
+  const prev = (e) => { e?.stopPropagation(); setCurrent((c) => (c - 1 + images.length) % images.length) }
+  const next = (e) => { e?.stopPropagation(); setCurrent((c) => (c + 1) % images.length) }
+
+  const onTouchStart = (e) => { touchStartX.current = e.touches[0].clientX }
+  const onTouchEnd = (e) => {
+    if (touchStartX.current === null) return
+    const diff = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(diff) > 40) diff > 0 ? next() : prev()
+    touchStartX.current = null
+  }
 
   if (!images || images.length === 0) {
     return (
-      <div className={`${height} bg-stone-100 flex items-center justify-center relative overflow-hidden`}>
+      <div className={`${height} bg-stone-50 border-b border-stone-200 flex items-center justify-center relative overflow-hidden`}>
         <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
         <FolderOpen size={large ? 48 : 36} className="text-stone-300 group-hover:text-stone-400 transition-colors" />
         {!large && (
@@ -53,27 +65,33 @@ function Carousel({ images, large = false }) {
     )
   }
 
-  const prev = (e) => { e.stopPropagation(); setCurrent((c) => (c - 1 + images.length) % images.length) }
-  const next = (e) => { e.stopPropagation(); setCurrent((c) => (c + 1) % images.length) }
-
   return (
-    <div className={`${height} bg-stone-100 relative overflow-hidden group/img`}>
+    <div
+      className={`${height} bg-stone-50 border-b border-stone-200 relative overflow-hidden group/img select-none`}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <img
         src={images[current]}
         alt="screenshot"
-        className="w-full h-full object-cover object-top transition-opacity duration-200"
+        className="w-full h-full object-contain transition-opacity duration-200"
+        draggable={false}
       />
       {images.length > 1 && (
         <>
           <button
             onClick={prev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 shadow opacity-0 group-hover/img:opacity-100 transition-opacity"
+            className={`absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow transition-opacity ${
+              large ? 'opacity-100' : 'opacity-0 group-hover/img:opacity-100'
+            }`}
           >
             <ChevronLeft size={large ? 18 : 14} className="text-stone-600" />
           </button>
           <button
             onClick={next}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 shadow opacity-0 group-hover/img:opacity-100 transition-opacity"
+            className={`absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow transition-opacity ${
+              large ? 'opacity-100' : 'opacity-0 group-hover/img:opacity-100'
+            }`}
           >
             <ChevronRight size={large ? 18 : 14} className="text-stone-600" />
           </button>
@@ -82,7 +100,7 @@ function Carousel({ images, large = false }) {
               <button
                 key={i}
                 onClick={(e) => { e.stopPropagation(); setCurrent(i) }}
-                className={`w-1.5 h-1.5 rounded-full transition-colors ${i === current ? 'bg-white' : 'bg-white/50'}`}
+                className={`w-2 h-2 rounded-full transition-colors ${i === current ? 'bg-white' : 'bg-white/50'}`}
               />
             ))}
           </div>
@@ -93,27 +111,39 @@ function Carousel({ images, large = false }) {
 }
 
 function ProjectModal({ project, onClose }) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 animate-fade-in"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/50 animate-fade-in"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl overflow-hidden w-full max-w-xl shadow-xl animate-slide-up"
+        className="bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-xl shadow-xl max-h-[92vh] sm:max-h-[88vh] flex flex-col animate-slide-from-bottom sm:animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Carousel grande */}
-        <Carousel images={project.images} large />
+        {/* Drag handle — solo mobile */}
+        <div className="flex justify-center pt-3 pb-1 sm:hidden shrink-0">
+          <div className="w-10 h-1 rounded-full bg-stone-300" />
+        </div>
 
-        {/* Contenido */}
-        <div className="p-6">
+        {/* Carousel grande */}
+        <div className="shrink-0 overflow-hidden rounded-t-3xl sm:rounded-none">
+          <Carousel images={project.images} large />
+        </div>
+
+        {/* Contenido scrollable */}
+        <div className="p-5 sm:p-6 overflow-y-auto flex-1 overscroll-contain">
           <div className="flex items-start justify-between gap-4 mb-2">
-            <h2 className="text-base font-semibold text-stone-900">{project.title}</h2>
+            <h2 className="text-base font-semibold text-stone-900 leading-snug">{project.title}</h2>
             <button
               onClick={onClose}
-              className="text-stone-400 hover:text-stone-600 transition-colors shrink-0"
+              className="text-stone-400 hover:text-stone-600 transition-colors shrink-0 p-2 -mr-1 -mt-1 rounded-full hover:bg-stone-100 active:bg-stone-200"
             >
-              <X size={18} />
+              <X size={20} />
             </button>
           </div>
 
@@ -137,22 +167,22 @@ function ProjectModal({ project, onClose }) {
               {project.github && project.github !== '#' && (
                 <a
                   href={project.github}
-                  className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
+                  className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors py-2"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Github size={13} />
+                  <Github size={14} />
                   Código
                 </a>
               )}
               {project.demo && (
                 <a
                   href={project.demo}
-                  className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
+                  className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors py-2"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <ExternalLink size={13} />
+                  <ExternalLink size={14} />
                   Demo
                 </a>
               )}
@@ -197,7 +227,7 @@ export default function Projects() {
             <div
               key={project.id}
               onClick={() => setSelected(project)}
-              className="group bg-white border border-stone-200 rounded-2xl overflow-hidden hover:border-stone-300 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 flex flex-col cursor-pointer"
+              className="group bg-white border border-stone-200 rounded-2xl overflow-hidden hover:border-stone-300 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 flex flex-col cursor-pointer active:scale-[0.99]"
             >
               <Carousel images={project.images} />
 
