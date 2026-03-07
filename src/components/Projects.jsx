@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Github, ExternalLink, FolderOpen, ChevronLeft, ChevronRight, X, Clock } from 'lucide-react'
+import { Github, FolderOpen, ChevronLeft, ChevronRight, X, Clock } from 'lucide-react'
 import { projects } from '../data/projects'
 
 const tagColors = {
@@ -165,26 +165,30 @@ function ProjectModal({ project, onClose }) {
           <div className="flex items-center justify-between pt-4 border-t border-stone-100">
             <div className="flex gap-4">
               {project.github && project.github !== '#' && (
-                <a
-                  href={project.github}
-                  className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors py-2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Github size={14} />
-                  Código
-                </a>
-              )}
-              {project.demo && (
-                <a
-                  href={project.demo}
-                  className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors py-2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink size={14} />
-                  Demo
-                </a>
+                project.privateRepo ? (
+                  <div className="relative group/tooltip">
+                    <button
+                      disabled
+                      className="flex items-center gap-1.5 text-stone-300 text-xs font-medium cursor-not-allowed py-2"
+                    >
+                      <Github size={14} />
+                      Código
+                    </button>
+                    <div className="absolute bottom-full left-0 mb-1.5 px-2 py-1 bg-stone-800 text-white text-[11px] rounded whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none">
+                      Repositorio privado
+                    </div>
+                  </div>
+                ) : (
+                  <a
+                    href={project.github}
+                    className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors py-2"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Github size={14} />
+                    Código
+                  </a>
+                )
               )}
             </div>
             {project.devTime && (
@@ -253,28 +257,31 @@ export default function Projects() {
                 <div className="flex items-center justify-between pt-3.5 border-t border-stone-100">
                   <div className="flex gap-4">
                     {project.github && project.github !== '#' && (
-                      <a
-                        href={project.github}
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Github size={13} />
-                        Código
-                      </a>
-                    )}
-                    {project.demo && (
-                      <a
-                        href={project.demo}
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink size={13} />
-                        Demo
-                      </a>
+                      project.privateRepo ? (
+                        <div className="relative group/tooltip">
+                          <button
+                            disabled
+                            className="flex items-center gap-1.5 text-stone-300 text-xs font-medium cursor-not-allowed"
+                          >
+                            <Github size={13} />
+                            Código
+                          </button>
+                          <div className="absolute bottom-full left-0 mb-1.5 px-2 py-1 bg-stone-800 text-white text-[11px] rounded whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none">
+                            Repositorio privado
+                          </div>
+                        </div>
+                      ) : (
+                        <a
+                          href={project.github}
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Github size={13} />
+                          Código
+                        </a>
+                      )
                     )}
                   </div>
                   {project.devTime && (

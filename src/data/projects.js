@@ -6,6 +6,7 @@ export const projects = [
     tags: ['React', 'ASP.NET Core', 'PostgreSQL', 'SignalR', 'Entity Framework', 'JWT'],
     category: 'web',
     github: 'https://github.com/ScidaP/BarMaster',
+    privateRepo: true,
     demo: null,
     devTime: '+2 años',
     images: [
