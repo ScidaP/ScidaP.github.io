@@ -47,6 +47,21 @@ export const projects = [
     ],
   },
   {
+    id: 4,
+    title: 'Este portfolio',
+    description: 'Portfolio personal construido con Claude como asistente de desarrollo. El objetivo fue explorar el ecosistema moderno de JavaScript y el nuevo paradigma de desarrollo asistido por IA, manteniéndome actualizado con las herramientas y flujos de trabajo actuales.',
+    tags: ['React', 'Vite', 'Tailwind CSS'],
+    category: 'web',
+    github: 'https://github.com/ScidaP/ScidaP.github.io',
+    demo: 'https://scidap.github.io',
+    devTime: 'En progreso',
+    images: [
+      '/img/portfolio/1.png',
+      '/img/portfolio/2.png',
+      '/img/portfolio/3.png',
+    ],
+  },
+  {
     id: 5,
     title: 'LoL Timer',
     description: '',
