@@ -2,7 +2,7 @@ export const projects = [
   {
     id: 1,
     title: 'Sistema para bares',
-    description: 'Sistema integral de gestión para bares y restaurantes. Administra pedidos, mesas, mozos y transacciones con comunicación en tiempo real entre cocina, personal y clientes.',
+    description: 'Sistema integral de gestión para bares y restaurantes. Administra pedidos, mesas, mozos y transacciones con comunicación en tiempo real entre cocina, personal y clientes. Muy pronto al lanzamiento.',
     tags: ['React', 'ASP.NET Core', 'PostgreSQL', 'SignalR', 'Entity Framework', 'JWT'],
     category: 'web',
     github: 'https://github.com/ScidaP/BarMaster',
@@ -19,7 +19,7 @@ export const projects = [
   {
     id: 2,
     title: 'GPU remote access',
-    description: 'Aplicación de escritorio para gestionar conexiones remotas a equipos con GPU. Permite agregar, editar y eliminar conexiones IP con autenticación de usuarios.',
+    description: 'Aplicación de escritorio para gestionar conexiones remotas a equipos con GPU. Permite agregar, editar y eliminar conexiones IP con autenticación de usuarios. Creado inicialmente para aprender sobre desarrollo con Python. La idea nace de una propuesta real de un cliente.',
     tags: ['Python', 'PySide6', 'PostgreSQL', 'Qt'],
     category: 'desktop',
     github: 'https://github.com/ScidaP/gpu-remote-access',
@@ -49,7 +49,7 @@ export const projects = [
   {
     id: 4,
     title: 'Este portfolio',
-    description: 'Portfolio personal construido con Claude como asistente de desarrollo. El objetivo fue explorar el ecosistema moderno de JavaScript y el nuevo paradigma de desarrollo asistido por IA, manteniéndome actualizado con las herramientas y flujos de trabajo actuales.',
+    description: 'Portfolio personal construido con Claude Code. El objetivo fue simplemente ambientarme en el desarrollo moderno de aplicaiones, con asistencia absoluta de IA pero con intensa supervisión humana.',
     tags: ['React', 'Vite', 'Tailwind CSS'],
     category: 'web',
     github: 'https://github.com/ScidaP/ScidaP.github.io',
