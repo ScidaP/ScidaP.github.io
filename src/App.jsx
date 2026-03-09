@@ -3,18 +3,21 @@ import Projects from './components/Projects'
 import Experience from './components/Experience'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import { LanguageProvider } from './context/LanguageContext'
 
 function App() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F8F7F4' }}>
-      <Navbar />
-      <main>
-        <Projects />
-        <Experience />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    <LanguageProvider>
+      <div className="min-h-screen" style={{ backgroundColor: '#F8F7F4' }}>
+        <Navbar />
+        <main>
+          <Projects />
+          <Experience />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
+    </LanguageProvider>
   )
 }
 

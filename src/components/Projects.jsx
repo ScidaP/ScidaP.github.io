@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Github, FolderOpen, ChevronLeft, ChevronRight, X, Clock } from 'lucide-react'
 import { projects } from '../data/projects'
+import { useLanguage } from '../context/LanguageContext'
 
 const tagColors = {
   'React':            'bg-blue-50 text-blue-600 border-blue-100',
@@ -39,6 +40,7 @@ function Carousel({ images, large = false }) {
   const [current, setCurrent] = useState(0)
   const touchStartX = useRef(null)
   const height = large ? 'h-56 sm:h-80' : 'h-40'
+  const { t } = useLanguage()
 
   const prev = (e) => { e?.stopPropagation(); setCurrent((c) => (c - 1 + images.length) % images.length) }
   const next = (e) => { e?.stopPropagation(); setCurrent((c) => (c + 1) % images.length) }
@@ -58,7 +60,7 @@ function Carousel({ images, large = false }) {
         <FolderOpen size={large ? 48 : 36} className="text-stone-300 group-hover:text-stone-400 transition-colors" />
         {!large && (
           <span className="absolute bottom-2.5 right-3 text-[10px] text-stone-400">
-            Imagen próximamente
+            {t.projects.imageComing}
           </span>
         )}
       </div>
@@ -111,10 +113,16 @@ function Carousel({ images, large = false }) {
 }
 
 function ProjectModal({ project, onClose }) {
+  const { lang, t } = useLanguage()
+
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = '' }
   }, [])
+
+  const title = lang === 'en' ? (project.titleEn || project.title) : project.title
+  const description = lang === 'en' ? (project.descriptionEn || project.description) : project.description
+  const devTime = lang === 'en' ? (project.devTimeEn || project.devTime) : project.devTime
 
   return (
     <div
@@ -138,7 +146,7 @@ function ProjectModal({ project, onClose }) {
         {/* Contenido scrollable */}
         <div className="p-5 sm:p-6 overflow-y-auto flex-1 overscroll-contain">
           <div className="flex items-start justify-between gap-4 mb-2">
-            <h2 className="text-base font-semibold text-stone-900 leading-snug">{project.title}</h2>
+            <h2 className="text-base font-semibold text-stone-900 leading-snug">{title}</h2>
             <button
               onClick={onClose}
               className="text-stone-400 hover:text-stone-600 transition-colors shrink-0 p-2 -mr-1 -mt-1 rounded-full hover:bg-stone-100 active:bg-stone-200"
@@ -147,8 +155,8 @@ function ProjectModal({ project, onClose }) {
             </button>
           </div>
 
-          {project.description && (
-            <p className="text-stone-500 text-sm leading-relaxed mb-4">{project.description}</p>
+          {description && (
+            <p className="text-stone-500 text-sm leading-relaxed mb-4">{description}</p>
           )}
 
           <div className="flex flex-wrap gap-1.5 mb-5">
@@ -172,10 +180,10 @@ function ProjectModal({ project, onClose }) {
                       className="flex items-center gap-1.5 text-stone-300 text-xs font-medium cursor-not-allowed py-2"
                     >
                       <Github size={14} />
-                      Código
+                      {t.projects.code}
                     </button>
                     <div className="absolute bottom-full left-0 mb-1.5 px-2 py-1 bg-stone-800 text-white text-[11px] rounded whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none">
-                      Repositorio privado
+                      {t.projects.privateRepo}
                     </div>
                   </div>
                 ) : (
@@ -186,15 +194,15 @@ function ProjectModal({ project, onClose }) {
                     rel="noopener noreferrer"
                   >
                     <Github size={14} />
-                    Código
+                    {t.projects.code}
                   </a>
                 )
               )}
             </div>
-            {project.devTime && (
+            {devTime && (
               <span className="flex items-center gap-1 text-[11px] text-stone-400">
                 <Clock size={11} />
-                {project.devTime}
+                {devTime}
               </span>
             )}
           </div>
@@ -206,6 +214,7 @@ function ProjectModal({ project, onClose }) {
 
 export default function Projects() {
   const [selected, setSelected] = useState(null)
+  const { lang, t } = useLanguage()
 
   return (
     <section id="projects" className="pt-28 pb-20 px-6">
@@ -216,84 +225,89 @@ export default function Projects() {
             Patricio Scidá
           </h1>
           <p className="text-stone-500 text-sm leading-relaxed max-w-lg">
-            Programador Universitario (UNT) · Licenciatura en Informática (UNT) · Diplomado en Peritaje Informático y Forensia Digital (UNT)
+            {t.projects.bio}
           </p>
         </div>
 
         <div className="border-t border-stone-200 mb-10" />
 
         <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-6">
-          Proyectos
+          {t.projects.sectionLabel}
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              onClick={() => setSelected(project)}
-              className="group bg-white border border-stone-200 rounded-2xl overflow-hidden hover:border-stone-300 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 flex flex-col cursor-pointer active:scale-[0.99]"
-            >
-              <Carousel images={project.images} />
+          {projects.map((project) => {
+            const title = lang === 'en' ? (project.titleEn || project.title) : project.title
+            const description = lang === 'en' ? (project.descriptionEn || project.description) : project.description
+            const devTime = lang === 'en' ? (project.devTimeEn || project.devTime) : project.devTime
+            return (
+              <div
+                key={project.id}
+                onClick={() => setSelected(project)}
+                className="group bg-white border border-stone-200 rounded-2xl overflow-hidden hover:border-stone-300 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 flex flex-col cursor-pointer active:scale-[0.99]"
+              >
+                <Carousel images={project.images} />
 
-              <div className="p-5 flex flex-col flex-1">
-                <h3 className="text-sm font-semibold text-stone-900 mb-1.5 group-hover:text-stone-700 transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-stone-500 text-xs leading-relaxed mb-4 flex-1">
-                  {project.description}
-                </p>
+                <div className="p-5 flex flex-col flex-1">
+                  <h3 className="text-sm font-semibold text-stone-900 mb-1.5 group-hover:text-stone-700 transition-colors">
+                    {title}
+                  </h3>
+                  <p className="text-stone-500 text-xs leading-relaxed mb-4 flex-1">
+                    {description}
+                  </p>
 
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className={`px-2 py-0.5 text-[11px] font-medium rounded-md border ${getTagColor(tag)}`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`px-2 py-0.5 text-[11px] font-medium rounded-md border ${getTagColor(tag)}`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
 
-                <div className="flex items-center justify-between pt-3.5 border-t border-stone-100">
-                  <div className="flex gap-4">
-                    {project.github && project.github !== '#' && (
-                      project.privateRepo ? (
-                        <div className="relative group/tooltip">
-                          <button
-                            disabled
-                            className="flex items-center gap-1.5 text-stone-300 text-xs font-medium cursor-not-allowed"
+                  <div className="flex items-center justify-between pt-3.5 border-t border-stone-100">
+                    <div className="flex gap-4">
+                      {project.github && project.github !== '#' && (
+                        project.privateRepo ? (
+                          <div className="relative group/tooltip">
+                            <button
+                              disabled
+                              className="flex items-center gap-1.5 text-stone-300 text-xs font-medium cursor-not-allowed"
+                            >
+                              <Github size={13} />
+                              {t.projects.code}
+                            </button>
+                            <div className="absolute bottom-full left-0 mb-1.5 px-2 py-1 bg-stone-800 text-white text-[11px] rounded whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none">
+                              {t.projects.privateRepo}
+                            </div>
+                          </div>
+                        ) : (
+                          <a
+                            href={project.github}
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
                             <Github size={13} />
-                            Código
-                          </button>
-                          <div className="absolute bottom-full left-0 mb-1.5 px-2 py-1 bg-stone-800 text-white text-[11px] rounded whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none">
-                            Repositorio privado
-                          </div>
-                        </div>
-                      ) : (
-                        <a
-                          href={project.github}
-                          onClick={(e) => e.stopPropagation()}
-                          className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-xs font-medium transition-colors"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Github size={13} />
-                          Código
-                        </a>
-                      )
+                            {t.projects.code}
+                          </a>
+                        )
+                      )}
+                    </div>
+                    {devTime && (
+                      <span className="flex items-center gap-1 text-[11px] text-stone-400">
+                        <Clock size={11} />
+                        {devTime}
+                      </span>
                     )}
                   </div>
-                  {project.devTime && (
-                    <span className="flex items-center gap-1 text-[11px] text-stone-400">
-                      <Clock size={11} />
-                      {project.devTime}
-                    </span>
-                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 

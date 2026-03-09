@@ -1,4 +1,5 @@
 import { Mail, Github, Linkedin } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const socialLinks = [
   {
@@ -28,16 +29,18 @@ const socialLinks = [
 ]
 
 export default function Contact() {
+  const { t } = useLanguage()
+
   return (
     <section id="contact" className="py-20 px-6 border-t border-stone-200">
       <div className="max-w-5xl mx-auto">
 
         <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-6">
-          Contacto
+          {t.contact.sectionLabel}
         </p>
 
         <h2 className="text-2xl font-semibold text-stone-900 mb-8 tracking-tight">
-          Encontrame en
+          {t.contact.heading}
         </h2>
 
         <div className="flex flex-col sm:flex-row gap-3">

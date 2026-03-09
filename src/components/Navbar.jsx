@@ -1,9 +1,44 @@
 import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
+
+function LangToggle({ className = '' }) {
+  const { lang, toggle } = useLanguage()
+  return (
+    <div className={`flex items-center rounded-lg border border-stone-200 overflow-hidden ${className}`}>
+      <button
+        onClick={() => lang !== 'es' && toggle()}
+        className={`flex items-center gap-1 px-2 py-1 text-xs font-medium transition-colors ${
+          lang === 'es'
+            ? 'bg-stone-100 text-stone-800'
+            : 'text-stone-400 hover:text-stone-600 hover:bg-stone-50'
+        }`}
+        aria-label="Español"
+      >
+        <span className="text-sm leading-none">🇪🇸</span>
+        <span>ES</span>
+      </button>
+      <div className="w-px h-4 bg-stone-200" />
+      <button
+        onClick={() => lang !== 'en' && toggle()}
+        className={`flex items-center gap-1 px-2 py-1 text-xs font-medium transition-colors ${
+          lang === 'en'
+            ? 'bg-stone-100 text-stone-800'
+            : 'text-stone-400 hover:text-stone-600 hover:bg-stone-50'
+        }`}
+        aria-label="English"
+      >
+        <span className="text-sm leading-none">🇬🇧</span>
+        <span>EN</span>
+      </button>
+    </div>
+  )
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { t } = useLanguage()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10)
@@ -30,29 +65,33 @@ export default function Navbar() {
             href="#projects"
             className="text-stone-500 hover:text-stone-900 text-sm font-medium transition-colors"
           >
-            Proyectos
+            {t.nav.projects}
           </a>
           <a
             href="#experience"
             className="text-stone-500 hover:text-stone-900 text-sm font-medium transition-colors"
           >
-            Experiencia
+            {t.nav.experience}
           </a>
           <a
             href="#contact"
             className="text-stone-500 hover:text-stone-900 text-sm font-medium transition-colors"
           >
-            Contacto
+            {t.nav.contact}
           </a>
+          <LangToggle />
         </div>
 
-        <button
-          className="md:hidden text-stone-500 hover:text-stone-900"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        <div className="md:hidden flex items-center gap-3">
+          <LangToggle />
+          <button
+            className="text-stone-500 hover:text-stone-900"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
       {mobileOpen && (
@@ -62,21 +101,21 @@ export default function Navbar() {
             className="text-stone-600 text-sm font-medium"
             onClick={() => setMobileOpen(false)}
           >
-            Proyectos
+            {t.nav.projects}
           </a>
           <a
             href="#experience"
             className="text-stone-600 text-sm font-medium"
             onClick={() => setMobileOpen(false)}
           >
-            Experiencia
+            {t.nav.experience}
           </a>
           <a
             href="#contact"
             className="text-stone-600 text-sm font-medium"
             onClick={() => setMobileOpen(false)}
           >
-            Contacto
+            {t.nav.contact}
           </a>
         </div>
       )}

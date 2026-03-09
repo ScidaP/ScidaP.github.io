@@ -1,4 +1,8 @@
+import { useLanguage } from '../context/LanguageContext'
+
 export default function Footer() {
+  const { t } = useLanguage()
+
   return (
     <footer className="border-t border-stone-200 py-6 px-6">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
@@ -6,7 +10,7 @@ export default function Footer() {
           © {new Date().getFullYear()} Patricio Scidá
         </p>
         <p className="text-stone-300 text-xs">
-          Construido con React & Tailwind CSS
+          {t.footer.builtWith}
         </p>
       </div>
     </footer>
