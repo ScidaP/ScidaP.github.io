@@ -1,6 +1,5 @@
 import Navbar from './components/Navbar'
 import Projects from './components/Projects'
-import PrivacyPolicies from './components/PrivacyPolicies'
 import Experience from './components/Experience'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
@@ -13,7 +12,6 @@ function App() {
         <Navbar />
         <main>
           <Projects />
-          <PrivacyPolicies />
           <Experience />
           <Contact />
         </main>

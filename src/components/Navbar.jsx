@@ -89,9 +89,6 @@ export default function Navbar() {
           <a href="#projects" className="text-stone-500 hover:text-stone-900 text-sm font-medium transition-colors">
             {t.nav.projects}
           </a>
-          <a href="#privacy" className="text-stone-500 hover:text-stone-900 text-sm font-medium transition-colors">
-            {t.nav.privacy}
-          </a>
           <a href="#experience" className="text-stone-500 hover:text-stone-900 text-sm font-medium transition-colors">
             {t.nav.experience}
           </a>
@@ -123,13 +120,6 @@ export default function Navbar() {
             onClick={() => setMobileOpen(false)}
           >
             {t.nav.projects}
-          </a>
-          <a
-            href="#privacy"
-            className="text-stone-600 text-sm font-medium py-3 border-b border-stone-100"
-            onClick={() => setMobileOpen(false)}
-          >
-            {t.nav.privacy}
           </a>
           <a
             href="#experience"
