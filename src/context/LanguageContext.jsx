@@ -4,6 +4,7 @@ const translations = {
   es: {
     nav: {
       projects: 'Proyectos',
+      privacy: 'Privacidad',
       experience: 'Experiencia',
       contact: 'Contacto',
     },
@@ -17,17 +18,23 @@ const translations = {
     experience: {
       sectionLabel: 'Experiencia Laboral',
     },
+    privacy: {
+      sectionLabel: 'Políticas de Privacidad',
+      lastUpdated: 'Última actualización',
+    },
     contact: {
       sectionLabel: 'Contacto',
       heading: 'Encontrame en',
     },
     footer: {
       builtWith: 'Construido con React & Tailwind CSS',
+      privacyPolicies: 'Privacy Policies',
     },
   },
   en: {
     nav: {
       projects: 'Projects',
+      privacy: 'Privacy',
       experience: 'Experience',
       contact: 'Contact',
     },
@@ -41,12 +48,17 @@ const translations = {
     experience: {
       sectionLabel: 'Work Experience',
     },
+    privacy: {
+      sectionLabel: 'Privacy Policies',
+      lastUpdated: 'Last updated',
+    },
     contact: {
       sectionLabel: 'Contact',
       heading: 'Find me at',
     },
     footer: {
       builtWith: 'Built with React & Tailwind CSS',
+      privacyPolicies: 'Privacy Policies',
     },
   },
 }

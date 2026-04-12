@@ -9,9 +9,14 @@ export default function Footer() {
         <p className="text-stone-400 text-xs">
           © {new Date().getFullYear()} Patricio Scidá
         </p>
-        <p className="text-stone-300 text-xs">
-          {t.footer.builtWith}
-        </p>
+        <div className="flex items-center gap-3 text-xs">
+          <a href="#privacy" className="text-stone-400 hover:text-stone-700 transition-colors">
+            {t.footer.privacyPolicies}
+          </a>
+          <p className="text-stone-300">
+            {t.footer.builtWith}
+          </p>
+        </div>
       </div>
     </footer>
   )
