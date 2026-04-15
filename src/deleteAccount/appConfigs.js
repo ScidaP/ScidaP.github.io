@@ -14,9 +14,9 @@ export const deleteAccountApps = {
     retentionCopy:
       'If any data must be retained for legal, anti-fraud, or technical integrity reasons, it will be kept only to the minimum extent necessary.',
     deletedData: [
-      'Your Supabase authentication account.',
-      'Your Equrix profile, progress, and related user data.',
-      'Any user record marked for deletion or anonymization in the backend.',
+      'Your Supabase authentication account will be deleted.',
+      'Your Equrix profile, progress, and related user data will be deleted.',
+      'Any user record marked for deletion or anonymization in the backend will be deleted.',
     ],
   },
   glenn: {
@@ -34,9 +34,9 @@ export const deleteAccountApps = {
     retentionCopy:
       'Some minimal records may be retained temporarily for regulatory, tax, anti-fraud, or operational integrity reasons.',
     deletedData: [
-      'Your Supabase authentication account.',
-      'Your personal and financial data configured for Glenn according to the backend policy.',
-      'Records flagged in the database for deletion or anonymization.',
+      'Your Supabase authentication account will be deleted.',
+      'Your personal and financial data configured for Glenn according to the backend policy will be deleted.',
+      'Records flagged in the database for deletion or anonymization will be deleted.',
     ],
   },
 }

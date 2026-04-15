@@ -220,7 +220,7 @@ function FAQ({ config }) {
         </article>
         <article>
           <h3>Can I delete someone else&apos;s account?</h3>
-          <p>No. Identity comes from the Supabase Auth JWT. The system never accepts a manually typed email to decide which account to delete.</p>
+          <p>No. You can only request deletion of your own account.</p>
         </article>
         <article>
           <h3>What happens if my session expires?</h3>
@@ -438,13 +438,13 @@ export function DeleteAccountApp({ config }) {
           <span className="eyebrow">Google Play compliant account deletion</span>
           <h1>Delete your {config.name} account</h1>
           <p>
-            This page lets you sign in with your real {config.name} account and request permanent deletion of the authenticated account. The final deletion step is executed securely in Supabase through an Edge Function.
+            This page lets you sign in with your real {config.name} account and request permanent deletion of the authenticated account.
           </p>
         </div>
         <div className="hero-points">
           <div>
             <strong>Secure</strong>
-            <span>Identity comes from the Supabase Auth JWT, not from a manually typed email.</span>
+            <span>Identity comes from the Supabase Auth service.</span>
           </div>
           <div>
             <strong>Irreversible</strong>

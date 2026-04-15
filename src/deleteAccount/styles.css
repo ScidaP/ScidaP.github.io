@@ -154,6 +154,10 @@ input { font: inherit; }
   gap: 12px;
 }
 
+.modal-actions {
+  margin-top: 28px;
+}
+
 .magic-link-form {
   margin-top: 18px;
   display: grid;
@@ -165,6 +169,10 @@ input { font: inherit; }
   gap: 8px;
   color: #0f172a;
   font-weight: 600;
+}
+
+.modal-card .field {
+  margin-bottom: 20px;
 }
 
 .field span { font-size: 0.95rem; }
