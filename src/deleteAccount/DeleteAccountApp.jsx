@@ -7,13 +7,13 @@ function getFriendlyErrorMessage(error, fallback) {
 
   const normalized = message.toLowerCase()
   if (normalized.includes('invalid login credentials')) {
-    return 'No se pudo validar la sesión. Volvé a iniciar sesión e intentá de nuevo.'
+    return 'Your session could not be validated. Please sign in again and try once more.'
   }
   if (normalized.includes('email rate limit exceeded')) {
-    return 'Se alcanzó el límite de emails. Esperá unos minutos e intentá de nuevo.'
+    return 'The email rate limit was reached. Please wait a few minutes and try again.'
   }
   if (normalized.includes('user not allowed')) {
-    return 'Esta cuenta no está habilitada para iniciar sesión desde este método.'
+    return 'This account is not enabled for this sign-in method.'
   }
 
   return message
@@ -44,10 +44,10 @@ function ConfigError({ config }) {
     <main className="delete-account-page">
       <section className="hero-card config-card">
         <span className="eyebrow">Delete Account</span>
-        <h1>La página no está configurada</h1>
+        <h1>This page is not configured</h1>
         <p>
-          Completá la configuración pública de <strong>{config?.name || 'la app'}</strong> en
-          `src/deleteAccount/appConfigs.js` antes de publicar esta ruta.
+          Complete the public configuration for <strong>{config?.name || 'this app'}</strong> in
+          `src/deleteAccount/appConfigs.js` before publishing this route.
         </p>
       </section>
     </main>
@@ -62,19 +62,19 @@ function ConfirmModal({ email, onCancel, onConfirm, loading, error }) {
     <div className="modal-backdrop" role="presentation">
       <div className="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
         <p className="eyebrow">Final confirmation</p>
-        <h2 id="confirm-title">Eliminar mi cuenta de forma permanente</h2>
+        <h2 id="confirm-title">Permanently delete my account</h2>
         <p>
-          Estás a punto de eliminar la cuenta autenticada como <strong>{email || 'usuario actual'}</strong>.
-          Esta acción es irreversible.
+          You are about to delete the account currently authenticated as <strong>{email || 'current user'}</strong>.
+          This action is irreversible.
         </p>
         <ul className="danger-list">
-          <li>Se eliminará tu acceso a la app.</li>
-          <li>Se borrarán o anonimizarán tus datos según la política configurada en Supabase.</li>
-          <li>No vas a poder recuperar la cuenta desde esta página una vez procesada.</li>
+          <li>Your access to the app will be removed.</li>
+          <li>Your data will be deleted or anonymized according to the policy configured in Supabase.</li>
+          <li>You will not be able to recover the account from this page once the process is completed.</li>
         </ul>
         <label className="field">
           <span>
-            Escribí <strong>DELETE</strong> para confirmar
+            Type <strong>DELETE</strong> to confirm
           </span>
           <input
             type="text"
@@ -87,10 +87,10 @@ function ConfirmModal({ email, onCancel, onConfirm, loading, error }) {
         <StatusBanner kind="error">{error}</StatusBanner>
         <div className="modal-actions">
           <button type="button" className="secondary-button" onClick={onCancel} disabled={loading}>
-            Cancelar
+            Cancel
           </button>
           <button type="button" className="danger-button" onClick={onConfirm} disabled={!isValid || loading}>
-            {loading ? 'Eliminando...' : 'Eliminar mi cuenta'}
+            {loading ? 'Deleting...' : 'Delete my account'}
           </button>
         </div>
       </div>
@@ -99,7 +99,7 @@ function ConfirmModal({ email, onCancel, onConfirm, loading, error }) {
 }
 
 function AccountPanel({ session, onDeleteClick, onSignOut, deleteLoading, deleteError }) {
-  const email = session?.user?.email || 'No email disponible'
+  const email = session?.user?.email || 'No email available'
   const provider = session?.user?.app_metadata?.provider
 
   return (
@@ -107,27 +107,27 @@ function AccountPanel({ session, onDeleteClick, onSignOut, deleteLoading, delete
       <div className="card-header">
         <div>
           <span className="eyebrow">Authenticated session</span>
-          <h2>Cuenta lista para eliminarse</h2>
+          <h2>Account ready for deletion</h2>
         </div>
         <button type="button" className="ghost-button" onClick={onSignOut} disabled={deleteLoading}>
-          Cerrar sesión
+          Sign out
         </button>
       </div>
 
       <div className="identity-box">
-        <span className="identity-label">Usuario autenticado</span>
+        <span className="identity-label">Authenticated user</span>
         <strong>{email}</strong>
-        {provider ? <span className="identity-meta">Proveedor: {provider}</span> : null}
+        {provider ? <span className="identity-meta">Provider: {provider}</span> : null}
       </div>
 
       <p className="muted-copy">
-        La eliminación solo afecta a la cuenta actualmente autenticada. No se acepta un email manual como prueba de identidad.
+        Deletion only affects the account currently authenticated. A manually typed email is never accepted as proof of identity.
       </p>
 
       <StatusBanner kind="error">{deleteError}</StatusBanner>
 
       <button type="button" className="danger-button wide-button" onClick={onDeleteClick} disabled={deleteLoading}>
-        {deleteLoading ? 'Procesando...' : 'Eliminar mi cuenta'}
+        {deleteLoading ? 'Processing...' : 'Delete my account'}
       </button>
     </section>
   )
@@ -146,20 +146,20 @@ function LoginPanel({
   return (
     <section className="surface-card">
       <span className="eyebrow">Sign in required</span>
-      <h2>Iniciá sesión con tu cuenta real</h2>
+      <h2>Sign in with your real account</h2>
       <p className="muted-copy">
-        Para evitar suplantaciones, solo el usuario autenticado en Supabase puede solicitar la eliminación de su propia cuenta.
+        To prevent impersonation, only the user authenticated through Supabase can request deletion of their own account.
       </p>
 
       <div className="auth-grid">
         {providers.includes('google') ? (
           <button type="button" className="primary-button" onClick={() => onProviderLogin('google')} disabled={authLoading}>
-            {authLoading ? 'Redirigiendo...' : 'Continuar con Google'}
+            {authLoading ? 'Redirecting...' : 'Continue with Google'}
           </button>
         ) : null}
         {providers.includes('apple') ? (
           <button type="button" className="secondary-button" onClick={() => onProviderLogin('apple')} disabled={authLoading}>
-            {authLoading ? 'Redirigiendo...' : 'Continuar con Apple'}
+            {authLoading ? 'Redirecting...' : 'Continue with Apple'}
           </button>
         ) : null}
       </div>
@@ -167,7 +167,7 @@ function LoginPanel({
       {magicLinkEnabled ? (
         <form className="magic-link-form" onSubmit={onMagicLinkSubmit}>
           <label className="field">
-            <span>O recibí un magic link para una cuenta existente</span>
+            <span>Or receive a magic link for an existing account</span>
             <input
               type="email"
               value={magicEmail}
@@ -179,7 +179,7 @@ function LoginPanel({
             />
           </label>
           <button type="submit" className="ghost-button" disabled={authLoading}>
-            {authLoading ? 'Enviando...' : 'Enviar magic link'}
+            {authLoading ? 'Sending...' : 'Send magic link'}
           </button>
         </form>
       ) : null}
@@ -193,12 +193,12 @@ function SuccessPanel({ email, onReset }) {
   return (
     <section className="surface-card success-card">
       <span className="eyebrow">Deletion completed</span>
-      <h2>La cuenta fue eliminada correctamente</h2>
+      <h2>Your account was deleted successfully</h2>
       <p>
-        La solicitud se procesó para <strong>{email || 'tu cuenta'}</strong>. La sesión local se cerró y ya no se puede volver a usar esta cuenta.
+        The request was processed for <strong>{email || 'your account'}</strong>. Your local session has been signed out and this account can no longer be used.
       </p>
       <button type="button" className="secondary-button" onClick={onReset}>
-        Volver al inicio
+        Back to start
       </button>
     </section>
   )
@@ -208,23 +208,23 @@ function FAQ({ config }) {
   return (
     <section className="surface-card faq-card">
       <span className="eyebrow">FAQ</span>
-      <h2>Antes de continuar</h2>
+      <h2>Before you continue</h2>
       <div className="faq-list">
         <article>
-          <h3>¿Qué datos se eliminan?</h3>
+          <h3>What data is deleted?</h3>
           <p>{config.deletedData.join(' ')}</p>
         </article>
         <article>
-          <h3>¿Qué datos podrían conservarse?</h3>
+          <h3>What data may be retained?</h3>
           <p>{config.retentionCopy}</p>
         </article>
         <article>
-          <h3>¿Puedo eliminar la cuenta de otra persona?</h3>
-          <p>No. La identidad se toma del JWT de Supabase Auth. El sistema no acepta un email manual para decidir qué cuenta borrar.</p>
+          <h3>Can I delete someone else&apos;s account?</h3>
+          <p>No. Identity comes from the Supabase Auth JWT. The system never accepts a manually typed email to decide which account to delete.</p>
         </article>
         <article>
-          <h3>¿Qué pasa si mi sesión expiró?</h3>
-          <p>La página te va a pedir que vuelvas a iniciar sesión antes de habilitar la eliminación.</p>
+          <h3>What happens if my session expires?</h3>
+          <p>The page will ask you to sign in again before deletion can continue.</p>
         </article>
       </div>
     </section>
@@ -278,7 +278,7 @@ export function DeleteAccountApp({ config }) {
       if (error) {
         setAuthMessage({
           kind: 'error',
-          text: getFriendlyErrorMessage(error, 'No se pudo recuperar la sesión actual.'),
+          text: getFriendlyErrorMessage(error, 'The current session could not be loaded.'),
         })
       }
 
@@ -318,7 +318,7 @@ export function DeleteAccountApp({ config }) {
     if (error) {
       setAuthMessage({
         kind: 'error',
-        text: getFriendlyErrorMessage(error, 'No se pudo iniciar el flujo de autenticación.'),
+        text: getFriendlyErrorMessage(error, 'The authentication flow could not be started.'),
       })
       setAuthLoading(false)
     }
@@ -340,12 +340,12 @@ export function DeleteAccountApp({ config }) {
     if (error) {
       setAuthMessage({
         kind: 'error',
-        text: getFriendlyErrorMessage(error, 'No se pudo enviar el magic link.'),
+        text: getFriendlyErrorMessage(error, 'The magic link could not be sent.'),
       })
     } else {
       setAuthMessage({
         kind: 'success',
-        text: 'Te enviamos un magic link. Abrilo desde el mismo dispositivo o navegador para continuar.',
+        text: 'We sent you a magic link. Open it on the same device or browser to continue.',
       })
     }
 
@@ -372,7 +372,7 @@ export function DeleteAccountApp({ config }) {
       await supabase.auth.signOut({ scope: 'local' })
       setAuthMessage({
         kind: 'error',
-        text: 'La sesión expiró. Volvé a iniciar sesión para continuar.',
+        text: 'Your session expired. Please sign in again to continue.',
       })
       return
     }
@@ -394,12 +394,12 @@ export function DeleteAccountApp({ config }) {
           setShowConfirmModal(false)
           setAuthMessage({
             kind: 'error',
-            text: 'La sesión expiró o ya no es válida. Volvé a iniciar sesión.',
+            text: 'Your session expired or is no longer valid. Please sign in again.',
           })
           return
         }
 
-        throw new Error(payload?.error || 'No se pudo procesar la eliminación de la cuenta.')
+        throw new Error(payload?.error || 'The account deletion request could not be processed.')
       }
 
       const resolvedEmail = currentEmail
@@ -408,7 +408,7 @@ export function DeleteAccountApp({ config }) {
       setSession(null)
       setShowConfirmModal(false)
     } catch (requestError) {
-      setDeleteError(getFriendlyErrorMessage(requestError, 'No se pudo eliminar la cuenta.'))
+      setDeleteError(getFriendlyErrorMessage(requestError, 'The account could not be deleted.'))
     } finally {
       setDeleteLoading(false)
     }
@@ -429,24 +429,24 @@ export function DeleteAccountApp({ config }) {
       <section className="hero-card">
         <div className="hero-copy">
           <span className="eyebrow">Google Play compliant account deletion</span>
-          <h1>Eliminar cuenta de {config.name}</h1>
+          <h1>Delete your {config.name} account</h1>
           <p>
-            Esta página permite iniciar sesión con tu cuenta real de {config.name} y pedir la eliminación permanente de la cuenta autenticada. La operación final se ejecuta en Supabase mediante una Edge Function segura.
+            This page lets you sign in with your real {config.name} account and request permanent deletion of the authenticated account. The final deletion step is executed securely in Supabase through an Edge Function.
           </p>
         </div>
         <div className="hero-points">
           <div>
-            <strong>Seguro</strong>
-            <span>La identidad sale del JWT de Supabase Auth, no de un email escrito manualmente.</span>
+            <strong>Secure</strong>
+            <span>Identity comes from the Supabase Auth JWT, not from a manually typed email.</span>
           </div>
           <div>
             <strong>Irreversible</strong>
-            <span>Se exige una confirmación fuerte antes de borrar la cuenta.</span>
+            <span>A strong confirmation step is required before the account is deleted.</span>
           </div>
           <div>
-            <strong>Soporte</strong>
+            <strong>Support</strong>
             <span>
-              Si necesitás ayuda, escribí a <a href={`mailto:${config.supportEmail}`}>{config.supportEmail}</a>.
+              If you need help, email <a href={`mailto:${config.supportEmail}`}>{config.supportEmail}</a>.
             </span>
           </div>
         </div>
@@ -455,7 +455,7 @@ export function DeleteAccountApp({ config }) {
       <div className="content-grid">
         <section className="surface-card">
           <span className="eyebrow">How it works</span>
-          <h2>Qué va a pasar con tu cuenta</h2>
+          <h2>What happens to your account</h2>
           <ul className="info-list">
             {config.deletedData.map((item) => (
               <li key={item}>{item}</li>
@@ -469,8 +469,8 @@ export function DeleteAccountApp({ config }) {
         ) : sessionLoading ? (
           <section className="surface-card">
             <span className="eyebrow">Loading</span>
-            <h2>Verificando sesión</h2>
-            <p className="muted-copy">Estamos comprobando si ya existe una sesión activa en Supabase Auth.</p>
+            <h2>Checking your session</h2>
+            <p className="muted-copy">We are checking whether an active Supabase Auth session already exists.</p>
           </section>
         ) : isAuthenticated ? (
           <AccountPanel
@@ -498,9 +498,9 @@ export function DeleteAccountApp({ config }) {
 
       <section className="surface-card">
         <span className="eyebrow">Need help?</span>
-        <h2>Contacto</h2>
+        <h2>Contact</h2>
         <p>
-          Si no podés iniciar sesión o creés que hubo un problema con la eliminación, escribí a{' '}
+          If you cannot sign in or believe there was a problem with the deletion process, email{' '}
           <a href={`mailto:${config.supportEmail}`}>{config.supportEmail}</a>.
         </p>
       </section>

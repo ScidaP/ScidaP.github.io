@@ -8,8 +8,8 @@ export const deleteAccountApps = {
     supabaseAnonKey: 'sb_publishable_uYwEIITVp7bRRoXgLRQTSw_u-4VGIZw',
     functionName: 'equrix-delete-account',
     authRedirectUrl: 'https://scidap.github.io/equrix/delete-account/',
-    providers: ['google', 'apple'],
-    magicLinkEnabled: true,
+    providers: ['google'],
+    magicLinkEnabled: false,
     retentionCopy:
       'Si existen datos que deban retenerse por motivos legales, antifraude o integridad técnica, se conservarán solo en la mínima medida necesaria.',
     deletedData: [
@@ -28,7 +28,7 @@ export const deleteAccountApps = {
     functionName: 'glenn-delete-account',
     authRedirectUrl: 'https://scidap.github.io/glenn/delete-account/',
     providers: ['google'],
-    magicLinkEnabled: true,
+    magicLinkEnabled: false,
     retentionCopy:
       'Ciertos registros mínimos podrían conservarse temporalmente por motivos regulatorios, fiscales, antifraude o integridad operativa.',
     deletedData: [
