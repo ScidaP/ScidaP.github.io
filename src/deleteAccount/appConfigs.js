@@ -3,6 +3,7 @@ export const deleteAccountApps = {
     key: 'equrix',
     name: 'Equrix',
     pageTitle: 'Equrix — Delete Account',
+    logoSrc: '/equrix/android-icon-foreground.png',
     supportEmail: 'patricioscida@gmail.com',
     supabaseUrl: 'https://wqyahicffmwubrsyvmhs.supabase.co',
     supabaseAnonKey: 'sb_publishable_uYwEIITVp7bRRoXgLRQTSw_u-4VGIZw',
@@ -11,17 +12,18 @@ export const deleteAccountApps = {
     providers: ['google'],
     magicLinkEnabled: false,
     retentionCopy:
-      'Si existen datos que deban retenerse por motivos legales, antifraude o integridad técnica, se conservarán solo en la mínima medida necesaria.',
+      'If any data must be retained for legal, anti-fraud, or technical integrity reasons, it will be kept only to the minimum extent necessary.',
     deletedData: [
-      'Tu cuenta de autenticación en Supabase.',
-      'Tu perfil, progreso y datos asociados configurados para Equrix.',
-      'Cualquier registro del usuario marcado para borrado o anonimización en el backend.',
+      'Your Supabase authentication account.',
+      'Your Equrix profile, progress, and related user data.',
+      'Any user record marked for deletion or anonymization in the backend.',
     ],
   },
   glenn: {
     key: 'glenn',
     name: 'Glenn',
     pageTitle: 'Glenn — Delete Account',
+    logoSrc: null,
     supportEmail: 'patricioscida@gmail.com',
     supabaseUrl: 'https://drvlnixmrikqygihpmey.supabase.co',
     supabaseAnonKey: 'sb_publishable_qf98wbEp-AmgSOzTOWN6Og_NVEARQb8',
@@ -30,11 +32,11 @@ export const deleteAccountApps = {
     providers: ['google'],
     magicLinkEnabled: false,
     retentionCopy:
-      'Ciertos registros mínimos podrían conservarse temporalmente por motivos regulatorios, fiscales, antifraude o integridad operativa.',
+      'Some minimal records may be retained temporarily for regulatory, tax, anti-fraud, or operational integrity reasons.',
     deletedData: [
-      'Tu cuenta de autenticación en Supabase.',
-      'Tus datos personales y financieros configurados para Glenn según la política del backend.',
-      'Registros anonimizables o eliminables definidos en la base de datos.',
+      'Your Supabase authentication account.',
+      'Your personal and financial data configured for Glenn according to the backend policy.',
+      'Records flagged in the database for deletion or anonymization.',
     ],
   },
 }

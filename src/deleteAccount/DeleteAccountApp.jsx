@@ -428,6 +428,13 @@ export function DeleteAccountApp({ config }) {
     <main className="delete-account-page">
       <section className="hero-card">
         <div className="hero-copy">
+          {config.logoSrc ? (
+            <img
+              src={config.logoSrc}
+              alt={`${config.name} logo`}
+              className="app-logo"
+            />
+          ) : null}
           <span className="eyebrow">Google Play compliant account deletion</span>
           <h1>Delete your {config.name} account</h1>
           <p>
