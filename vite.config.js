@@ -8,6 +8,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        'equrix/delete': resolve(__dirname, 'equrix/delete/index.html'),
+        'equrix/delete-account': resolve(__dirname, 'equrix/delete-account/index.html'),
         'equrix/privacy': resolve(__dirname, 'equrix/privacy/index.html'),
         'glenn/privacy': resolve(__dirname, 'glenn/privacy/index.html'),
       },
