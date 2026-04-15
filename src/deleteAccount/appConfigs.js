@@ -3,7 +3,7 @@ export const deleteAccountApps = {
     key: 'equrix',
     name: 'Equrix',
     pageTitle: 'Equrix — Delete Account',
-    logoSrc: '/equrix/android-icon-foreground.png',
+    logoSrc: '../../equrix/android-icon-foreground.png',
     supportEmail: 'patricioscida@gmail.com',
     supabaseUrl: 'https://wqyahicffmwubrsyvmhs.supabase.co',
     supabaseAnonKey: 'sb_publishable_uYwEIITVp7bRRoXgLRQTSw_u-4VGIZw',
