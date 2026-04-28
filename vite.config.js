@@ -10,6 +10,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         'equrix/delete-account': resolve(__dirname, 'equrix/delete-account/index.html'),
         'equrix/privacy': resolve(__dirname, 'equrix/privacy/index.html'),
+        'glenn/delete-account': resolve(__dirname, 'glenn/delete-account/index.html'),
         'glenn/privacy': resolve(__dirname, 'glenn/privacy/index.html'),
       },
     },
