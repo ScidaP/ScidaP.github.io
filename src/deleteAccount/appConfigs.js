@@ -10,6 +10,7 @@ export const deleteAccountApps = {
     functionName: 'equrix-delete-account',
     authRedirectUrl: 'https://scidap.github.io/equrix/delete-account/',
     providers: ['google'],
+    passwordAuthEnabled: false,
     magicLinkEnabled: false,
     retentionCopy:
       'If any data must be retained for legal, anti-fraud, or technical integrity reasons, it will be kept only to the minimum extent necessary.',
@@ -30,6 +31,7 @@ export const deleteAccountApps = {
     functionName: 'glenn-delete-account',
     authRedirectUrl: 'https://scidap.github.io/glenn/delete-account/',
     providers: ['google'],
+    passwordAuthEnabled: true,
     magicLinkEnabled: false,
     retentionCopy:
       'Some minimal records may be retained temporarily for regulatory, tax, anti-fraud, or operational integrity reasons.',

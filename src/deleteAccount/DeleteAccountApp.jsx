@@ -34,6 +34,19 @@ function buildFunctionUrl(config) {
   return `${config.supabaseUrl.replace(/\/$/, '')}/functions/v1/${config.functionName}`
 }
 
+function getAuthRedirectUrl(config) {
+  if (typeof window === 'undefined') {
+    return config.authRedirectUrl
+  }
+
+  const { origin, pathname, protocol } = window.location
+  if (protocol === 'http:' || protocol === 'https:') {
+    return `${origin}${pathname}`
+  }
+
+  return config.authRedirectUrl
+}
+
 function StatusBanner({ kind, children }) {
   if (!children) return null
   return <div className={`status-banner ${kind}`}>{children}</div>
@@ -135,8 +148,14 @@ function AccountPanel({ session, onDeleteClick, onSignOut, deleteLoading, delete
 
 function LoginPanel({
   providers,
+  passwordAuthEnabled,
   authLoading,
   authMessage,
+  passwordEmail,
+  passwordValue,
+  onPasswordEmailChange,
+  onPasswordValueChange,
+  onPasswordSubmit,
   magicEmail,
   onMagicEmailChange,
   onProviderLogin,
@@ -164,6 +183,38 @@ function LoginPanel({
         ) : null}
       </div>
 
+      {passwordAuthEnabled ? (
+        <form className="magic-link-form" onSubmit={onPasswordSubmit}>
+          <label className="field">
+            <span>Or sign in with your email and password</span>
+            <input
+              type="email"
+              value={passwordEmail}
+              onChange={(event) => onPasswordEmailChange(event.target.value)}
+              placeholder="your-email@example.com"
+              autoComplete="email"
+              disabled={authLoading}
+              required
+            />
+          </label>
+          <label className="field">
+            <span>Password</span>
+            <input
+              type="password"
+              value={passwordValue}
+              onChange={(event) => onPasswordValueChange(event.target.value)}
+              placeholder="Your password"
+              autoComplete="current-password"
+              disabled={authLoading}
+              required
+            />
+          </label>
+          <button type="submit" className="secondary-button" disabled={authLoading}>
+            {authLoading ? 'Signing in...' : 'Sign in with email'}
+          </button>
+        </form>
+      ) : null}
+
       {magicLinkEnabled ? (
         <form className="magic-link-form" onSubmit={onMagicLinkSubmit}>
           <label className="field">
@@ -172,7 +223,7 @@ function LoginPanel({
               type="email"
               value={magicEmail}
               onChange={(event) => onMagicEmailChange(event.target.value)}
-              placeholder="tu-email@ejemplo.com"
+              placeholder="your-email@example.com"
               autoComplete="email"
               disabled={authLoading}
               required
@@ -236,6 +287,8 @@ export function DeleteAccountApp({ config }) {
   const [sessionLoading, setSessionLoading] = useState(true)
   const [authLoading, setAuthLoading] = useState(false)
   const [authMessage, setAuthMessage] = useState(null)
+  const [passwordEmail, setPasswordEmail] = useState('')
+  const [passwordValue, setPasswordValue] = useState('')
   const [magicEmail, setMagicEmail] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [deleteError, setDeleteError] = useState('')
@@ -256,6 +309,7 @@ export function DeleteAccountApp({ config }) {
 
   const isAuthenticated = Boolean(session?.user)
   const currentEmail = useMemo(() => session?.user?.email || '', [session])
+  const authRedirectUrl = useMemo(() => getAuthRedirectUrl(config), [config])
 
   useEffect(() => {
     document.title = config?.pageTitle || 'Delete Account'
@@ -311,7 +365,7 @@ export function DeleteAccountApp({ config }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: config.authRedirectUrl,
+        redirectTo: authRedirectUrl,
       },
     })
 
@@ -332,7 +386,7 @@ export function DeleteAccountApp({ config }) {
     const { error } = await supabase.auth.signInWithOtp({
       email: magicEmail.trim(),
       options: {
-        emailRedirectTo: config.authRedirectUrl,
+        emailRedirectTo: authRedirectUrl,
         shouldCreateUser: false,
       },
     })
@@ -349,6 +403,29 @@ export function DeleteAccountApp({ config }) {
       })
     }
 
+    setAuthLoading(false)
+  }
+
+  async function handlePasswordSubmit(event) {
+    event.preventDefault()
+    setAuthLoading(true)
+    setAuthMessage(null)
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: passwordEmail.trim(),
+      password: passwordValue,
+    })
+
+    if (error) {
+      setAuthMessage({
+        kind: 'error',
+        text: getFriendlyErrorMessage(error, 'The email sign-in request could not be completed.'),
+      })
+      setAuthLoading(false)
+      return
+    }
+
+    setPasswordValue('')
     setAuthLoading(false)
   }
 
@@ -490,8 +567,14 @@ export function DeleteAccountApp({ config }) {
         ) : (
           <LoginPanel
             providers={config.providers}
+            passwordAuthEnabled={config.passwordAuthEnabled}
             authLoading={authLoading}
             authMessage={authMessage}
+            passwordEmail={passwordEmail}
+            passwordValue={passwordValue}
+            onPasswordEmailChange={setPasswordEmail}
+            onPasswordValueChange={setPasswordValue}
+            onPasswordSubmit={handlePasswordSubmit}
             magicEmail={magicEmail}
             onMagicEmailChange={setMagicEmail}
             onProviderLogin={handleProviderLogin}
