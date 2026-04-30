@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -50,13 +50,67 @@
         line-height: 1.7;
         color: #4a5568;
       }
+
+      .hidden {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <main>
       <img src="https://scidap.github.io/glenn/icon-logo.png" alt="Glenn logo" />
       <h1>Your email was confirmed successfully.</h1>
-      <p>Thanks for using Glenn. You can now sign in.</p>
+      <p id="message">Thanks for using Glenn. You can now sign in.</p>
     </main>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+
+        function getParam(name) {
+          return params.get(name) || hashParams.get(name) || "";
+        }
+
+        var payload = new URLSearchParams();
+        [
+          "code",
+          "token_hash",
+          "type",
+          "access_token",
+          "refresh_token",
+          "error_code",
+          "error_description"
+        ].forEach(function (key) {
+          var value = getParam(key);
+          if (value) payload.set(key, value);
+        });
+
+        var deepLink = "glenn://auth/callback";
+        if (payload.toString()) {
+          deepLink += "?" + payload.toString();
+        }
+
+        var message = document.getElementById("message");
+        var hasError = payload.has("error_code");
+        var isProbablyMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+
+        if (hasError) {
+          message.textContent = "This confirmation link needs attention. Please request a new email and try again.";
+          return;
+        }
+
+        if (!payload.toString()) {
+          message.textContent = "Thanks for using Glenn. You can now sign in.";
+          return;
+        }
+
+        if (isProbablyMobile) {
+          message.textContent = "Thanks for using Glenn. We are opening the app for you now.";
+          setTimeout(function () {
+            window.location.replace(deepLink);
+          }, 250);
+        }
+      })();
+    </script>
   </body>
 </html>
