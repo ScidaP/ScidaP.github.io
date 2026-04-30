@@ -10,7 +10,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         'equrix/delete-account': resolve(__dirname, 'equrix/delete-account/index.html'),
         'equrix/privacy': resolve(__dirname, 'equrix/privacy/index.html'),
-        'glenn/auth/callback': resolve(__dirname, 'glenn/auth/callback/index.html'),
+        'glenn/auth/confirm': resolve(__dirname, 'glenn/auth/confirm/index.html'),
         'glenn/auth/reset-password': resolve(__dirname, 'glenn/auth/reset-password/index.html'),
         'glenn/delete-account': resolve(__dirname, 'glenn/delete-account/index.html'),
         'glenn/privacy': resolve(__dirname, 'glenn/privacy/index.html'),

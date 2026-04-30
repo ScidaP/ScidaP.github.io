@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glenn email confirmation</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #eef4fb;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #5b6b82;
+        --line: #d8e2ef;
+        --primary: #0f172a;
+        --accent: #1e3a5f;
+        --success: #0f766e;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top, rgba(30, 58, 95, 0.14), transparent 32%),
+          linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .card {
+        width: min(100%, 680px);
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        box-shadow: 0 24px 80px rgba(15, 23, 42, 0.10);
+        overflow: hidden;
+      }
+      .hero {
+        padding: 28px 28px 22px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        color: #fff;
+      }
+      .eyebrow {
+        margin: 0 0 8px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.72);
+      }
+      h1 { margin: 0; font-size: 30px; line-height: 1.1; }
+      .body { padding: 28px; }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(15, 118, 110, 0.08);
+        color: var(--success);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      p {
+        margin: 18px 0 0;
+        font-size: 16px;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      .button {
+        appearance: none;
+        border: 0;
+        border-radius: 999px;
+        padding: 14px 20px;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .button-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+      .button-secondary {
+        background: #edf2f8;
+        color: var(--text);
+      }
+      .panel {
+        margin-top: 24px;
+        padding: 18px;
+        border-radius: 20px;
+        background: #f8fbff;
+        border: 1px solid var(--line);
+      }
+      .panel h2 {
+        margin: 0 0 10px;
+        font-size: 15px;
+      }
+      .panel p {
+        margin: 0;
+        font-size: 14px;
+      }
+      .mono {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: #fff;
+        border: 1px solid var(--line);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.5;
+        word-break: break-all;
+        color: var(--text);
+      }
+      .hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <section class="hero">
+        <p class="eyebrow">Glenn account</p>
+        <h1 id="title">Finishing your sign-in</h1>
+      </section>
+      <section class="body">
+        <div class="status">
+          <span class="status-dot"></span>
+          <span id="status-text">Preparing secure redirect</span>
+        </div>
+        <p id="message">We are verifying your link and trying to open Glenn on this device.</p>
+        <div class="actions" id="actions">
+          <a class="button button-primary" id="open-app" href="#">Open Glenn</a>
+          <button class="button button-secondary" id="copy-link" type="button">Copy app link</button>
+        </div>
+        <div class="panel" id="desktop-panel">
+          <h2>Opened this link on a computer?</h2>
+          <p>
+            Your email can still be confirmed here, but a desktop browser cannot send you back into the mobile app on your phone automatically.
+            After confirmation, open Glenn on your phone and sign in there.
+          </p>
+          <div class="mono" id="app-link-preview"></div>
+        </div>
+        <div class="panel hidden" id="error-panel">
+          <h2>Could not finish the redirect</h2>
+          <p id="error-message">This link may be expired or already used. Try requesting a new confirmation email from Glenn.</p>
+        </div>
+      </section>
+    </main>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+        function getParam(name) {
+          return params.get(name) || hashParams.get(name) || "";
+        }
+        var payload = new URLSearchParams();
+        ["code", "token_hash", "type", "access_token", "refresh_token", "error_code", "error_description"].forEach(function (key) {
+          var value = getParam(key);
+          if (value) payload.set(key, value);
+        });
+        var deepLink = "glenn://auth/callback";
+        if (payload.toString()) deepLink += "?" + payload.toString();
+        var openApp = document.getElementById("open-app");
+        var copyLink = document.getElementById("copy-link");
+        var actions = document.getElementById("actions");
+        var appLinkPreview = document.getElementById("app-link-preview");
+        var desktopPanel = document.getElementById("desktop-panel");
+        var title = document.getElementById("title");
+        var message = document.getElementById("message");
+        var statusText = document.getElementById("status-text");
+        var errorPanel = document.getElementById("error-panel");
+        var errorMessage = document.getElementById("error-message");
+        openApp.href = deepLink;
+        appLinkPreview.textContent = deepLink;
+        var hasError = payload.has("error_code");
+        var isProbablyMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+        if (hasError) {
+          title.textContent = "This confirmation link needs attention";
+          statusText.textContent = "Redirect failed";
+          message.textContent = "Glenn could not complete this confirmation link.";
+          errorMessage.textContent = getParam("error_description") || errorMessage.textContent;
+          errorPanel.classList.remove("hidden");
+        } else if (payload.has("token_hash") || payload.has("code") || payload.has("access_token")) {
+          if (isProbablyMobile) {
+            title.textContent = "Your email is ready to confirm";
+            statusText.textContent = "Opening Glenn";
+            message.textContent = "If Glenn does not open automatically, use the button below.";
+          } else {
+            title.textContent = "Account verified successfully";
+            statusText.textContent = "Verified";
+            message.textContent = "You can close this window.";
+            if (actions) actions.classList.add("hidden");
+            if (desktopPanel) desktopPanel.classList.add("hidden");
+          }
+        } else {
+          title.textContent = "Open Glenn to continue";
+          statusText.textContent = "Waiting for app handoff";
+          message.textContent = "This page did not receive a valid auth payload. Use a fresh email link from Glenn.";
+        }
+        copyLink.addEventListener("click", function () {
+          if (!navigator.clipboard || !navigator.clipboard.writeText) return;
+          navigator.clipboard.writeText(deepLink).then(function () {
+            copyLink.textContent = "Copied";
+          }).catch(function () {
+          });
+        });
+        if (isProbablyMobile && !hasError && payload.toString()) {
+          setTimeout(function () {
+            window.location.replace(deepLink);
+          }, 250);
+        }
+      })();
+    </script>
+  </body>
+</html>
