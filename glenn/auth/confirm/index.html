@@ -50,7 +50,24 @@
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.72);
       }
-      h1 { margin: 0; font-size: 30px; line-height: 1.1; }
+      h1 {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1.1;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .title-logo {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex: 0 0 auto;
+      }
+      .title-text {
+        display: inline-block;
+      }
       .body { padding: 28px; }
       .status {
         display: inline-flex;
@@ -114,6 +131,16 @@
         margin: 0;
         font-size: 14px;
       }
+      .footer {
+        padding: 0 28px 28px;
+        display: flex;
+        justify-content: center;
+      }
+      .footer-logo {
+        width: min(100%, 220px);
+        height: auto;
+        display: block;
+      }
       .mono {
         margin-top: 14px;
         padding: 12px 14px;
@@ -133,7 +160,10 @@
     <main class="card">
       <section class="hero">
         <p class="eyebrow">Glenn account</p>
-        <h1 id="title">Finishing your sign-in</h1>
+        <h1>
+          <img class="title-logo" src="https://scidap.github.io/glenn/icon-logo.png" alt="Glenn logo" />
+          <span class="title-text" id="title">Finishing your sign-in</span>
+        </h1>
       </section>
       <section class="body">
         <div class="status">
@@ -158,6 +188,9 @@
           <p id="error-message">This link may be expired or already used. Try requesting a new confirmation email from Glenn.</p>
         </div>
       </section>
+      <footer class="footer">
+        <img class="footer-logo" src="https://scidap.github.io/glenn/icon-full.png" alt="Glenn" />
+      </footer>
     </main>
     <script>
       (function () {
