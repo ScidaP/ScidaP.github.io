@@ -59,8 +59,8 @@
   <body>
     <main>
       <img src="https://scidap.github.io/glenn/icon-logo.png" alt="Glenn logo" />
-      <h1>Your email was confirmed successfully.</h1>
-      <p id="message">Thanks for using Glenn. You can now sign in.</p>
+      <h1 id="title">Confirming your email</h1>
+      <p id="message">We are verifying your confirmation link.</p>
     </main>
     <script>
       (function () {
@@ -90,26 +90,34 @@
           deepLink += "?" + payload.toString();
         }
 
+        var title = document.getElementById("title");
         var message = document.getElementById("message");
         var hasError = payload.has("error_code");
         var isProbablyMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
 
         if (hasError) {
+          title.textContent = "This confirmation link needs attention";
           message.textContent = "This confirmation link needs attention. Please request a new email and try again.";
           return;
         }
 
         if (!payload.toString()) {
-          message.textContent = "Thanks for using Glenn. You can now sign in.";
+          title.textContent = "Open Glenn from your email link";
+          message.textContent = "This page only works when opened from a valid email confirmation link.";
           return;
         }
+
+        title.textContent = "Your email was confirmed successfully.";
 
         if (isProbablyMobile) {
           message.textContent = "Thanks for using Glenn. We are opening the app for you now.";
           setTimeout(function () {
             window.location.replace(deepLink);
           }, 250);
+          return;
         }
+
+        message.textContent = "Thanks for using Glenn. You can now sign in.";
       })();
     </script>
   </body>
