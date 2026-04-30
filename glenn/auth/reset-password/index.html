@@ -114,17 +114,16 @@
         margin: 0;
         font-size: 14px;
       }
-      .mono {
-        margin-top: 14px;
-        padding: 12px 14px;
-        border-radius: 16px;
-        background: #fff;
-        border: 1px solid var(--line);
-        font-family: Consolas, "Courier New", monospace;
-        font-size: 12px;
-        line-height: 1.5;
-        word-break: break-all;
-        color: var(--text);
+      .footer {
+        display: flex;
+        justify-content: center;
+        padding: 0 28px 28px;
+      }
+      .footer-logo {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
       }
       .hidden { display: none; }
     </style>
@@ -151,13 +150,19 @@
             Glenn does not let you change your password in the browser.
             Open Glenn on your phone to choose a new password there.
           </p>
-          <div class="mono" id="app-link-preview"></div>
         </div>
         <div class="panel hidden" id="error-panel">
           <h2>Could not finish the reset flow</h2>
           <p id="error-message">This reset link may be expired or already used. Request a new password reset email from Glenn.</p>
         </div>
       </section>
+      <footer class="footer">
+        <img
+          class="footer-logo"
+          src="https://scidap.github.io/glenn/icon-logo.png"
+          alt="Glenn logo"
+        />
+      </footer>
     </main>
     <script>
       (function () {
@@ -177,7 +182,6 @@
         var openApp = document.getElementById("open-app");
         var copyLink = document.getElementById("copy-link");
         var actions = document.getElementById("actions");
-        var appLinkPreview = document.getElementById("app-link-preview");
         var desktopPanel = document.getElementById("desktop-panel");
         var title = document.getElementById("title");
         var message = document.getElementById("message");
@@ -185,7 +189,6 @@
         var errorPanel = document.getElementById("error-panel");
         var errorMessage = document.getElementById("error-message");
         openApp.href = deepLink;
-        appLinkPreview.textContent = deepLink;
         var hasError = payload.has("error_code");
         var isProbablyMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
         if (hasError) {
