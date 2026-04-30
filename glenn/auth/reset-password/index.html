@@ -141,14 +141,14 @@
           <span id="status-text">Preparing secure redirect</span>
         </div>
         <p id="message">We are verifying your reset link and trying to open Glenn on this device.</p>
-        <div class="actions">
+        <div class="actions" id="actions">
           <a class="button button-primary" id="open-app" href="#">Open Glenn</a>
           <button class="button button-secondary" id="copy-link" type="button">Copy app link</button>
         </div>
-        <div class="panel">
+        <div class="panel" id="desktop-panel">
           <h2>Opened this link on a computer?</h2>
           <p>
-            The reset link is valid here, but a desktop browser cannot send you directly into Glenn on your phone.
+            Glenn does not let you change your password in the browser.
             Open Glenn on your phone to choose a new password there.
           </p>
           <div class="mono" id="app-link-preview"></div>
@@ -176,7 +176,9 @@
         if (payload.toString()) deepLink += "?" + payload.toString();
         var openApp = document.getElementById("open-app");
         var copyLink = document.getElementById("copy-link");
+        var actions = document.getElementById("actions");
         var appLinkPreview = document.getElementById("app-link-preview");
+        var desktopPanel = document.getElementById("desktop-panel");
         var title = document.getElementById("title");
         var message = document.getElementById("message");
         var statusText = document.getElementById("status-text");
@@ -193,11 +195,16 @@
           errorMessage.textContent = getParam("error_description") || errorMessage.textContent;
           errorPanel.classList.remove("hidden");
         } else if (payload.has("token_hash") || payload.has("code") || payload.has("access_token")) {
-          title.textContent = "Your password reset is ready";
-          statusText.textContent = isProbablyMobile ? "Opening Glenn" : "Reset link opened in browser";
-          message.textContent = isProbablyMobile
-            ? "If Glenn does not open automatically, use the button below to choose your new password in the app."
-            : "Your browser opened the reset link correctly. Now open Glenn on your phone to choose a new password there.";
+          if (isProbablyMobile) {
+            title.textContent = "Your password reset is ready";
+            statusText.textContent = "Opening Glenn";
+            message.textContent = "If Glenn does not open automatically, use the button below to choose your new password in the app.";
+          } else {
+            title.textContent = "Open Glenn on your phone";
+            statusText.textContent = "App required";
+            message.textContent = "For security, Glenn only lets you choose a new password inside the app.";
+            if (actions) actions.classList.add("hidden");
+          }
         } else {
           title.textContent = "Open Glenn to continue";
           statusText.textContent = "Waiting for app handoff";
