@@ -21,8 +21,8 @@ const socialLinks = [
   {
     icon: Mail,
     label: 'Email',
-    href: 'mailto:scidapatricio@gmail.com',
-    username: 'scidapatricio@gmail.com',
+    href: 'mailto:patricioscida@gmail.com',
+    username: 'patricioscida@gmail.com',
     iconClass: 'text-stone-500',
     bgClass: 'bg-stone-100 group-hover:bg-stone-200',
   },
