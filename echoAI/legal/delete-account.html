@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Delete Echo AI Account</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #0c0a09;
+        --ink: #fff1de;
+        --muted: rgba(255, 241, 222, 0.72);
+        --line: rgba(255, 241, 222, 0.22);
+        --panel: rgba(255, 241, 222, 0.08);
+        --button: #ffdca8;
+        --button-ink: #24130c;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background: radial-gradient(circle at top, rgba(255, 220, 168, 0.16), transparent 32rem), var(--bg);
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      main {
+        margin: 0 auto;
+        max-width: 820px;
+        padding: 48px 20px 72px;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 36px;
+      }
+
+      a {
+        color: #ffdca8;
+      }
+
+      nav a {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 12px;
+        text-decoration: none;
+      }
+
+      h1,
+      h2 {
+        line-height: 1.15;
+      }
+
+      h1 {
+        font-size: 40px;
+        margin: 0 0 8px;
+      }
+
+      h2 {
+        border-top: 1px solid var(--line);
+        font-size: 22px;
+        margin-top: 34px;
+        padding-top: 24px;
+      }
+
+      p,
+      li,
+      label {
+        color: var(--muted);
+      }
+
+      form {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        display: grid;
+        gap: 14px;
+        margin-top: 18px;
+        padding: 18px;
+      }
+
+      input,
+      textarea {
+        background: rgba(255, 241, 222, 0.08);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--ink);
+        font: inherit;
+        padding: 12px;
+        width: 100%;
+      }
+
+      textarea {
+        min-height: 110px;
+        resize: vertical;
+      }
+
+      button {
+        background: var(--button);
+        border: 0;
+        border-radius: 8px;
+        color: var(--button-ink);
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+        min-height: 46px;
+        padding: 12px 16px;
+      }
+
+      .meta,
+      .notice {
+        color: rgba(255, 241, 222, 0.58);
+      }
+
+      .notice {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <nav aria-label="Legal pages">
+        <a href="./privacy-policy.html">Privacy Policy</a>
+        <a href="./terms-of-use.html">Terms of Use</a>
+        <a href="./delete-account.html">Delete Account</a>
+      </nav>
+
+      <h1>Delete Your Echo AI Account</h1>
+      <p class="meta">Last updated: June 11, 2026</p>
+      <p class="notice">
+        Use this page to request permanent deletion of your Echo AI account and associated app data. You can also email
+        <a href="mailto:support@echoai.app">support@echoai.app</a> directly.
+      </p>
+
+      <h2>What will be deleted</h2>
+      <ul>
+        <li>Your Echo AI account profile.</li>
+        <li>Your voice entries and uploaded audio files.</li>
+        <li>Transcripts, summaries, analysis, scores, patterns, and insights associated with your account.</li>
+        <li>Account links associated with Echo AI, subject to provider and legal retention requirements.</li>
+      </ul>
+
+      <h2>What may be retained temporarily</h2>
+      <p>
+        Some records may remain in backups, logs, fraud-prevention records, security records, or legal compliance records for a limited
+        period. These retained records are not used to provide the active app experience.
+      </p>
+
+      <h2>Request deletion</h2>
+      <p>
+        Enter the email connected to your Echo AI account. If you use a guest account, include any information that can help identify it,
+        such as the display name used in the app and approximate date of last use.
+      </p>
+
+      <form id="delete-account-form">
+        <label>
+          Account email
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" />
+        </label>
+        <label>
+          Additional details
+          <textarea id="details" name="details" placeholder="Display name, guest account details, or anything else that helps identify the account."></textarea>
+        </label>
+        <button type="submit">Prepare deletion request</button>
+      </form>
+
+      <h2>Verification</h2>
+      <p>
+        We may need to verify that you control the account before deletion. Deletion requests are typically processed within 30 days
+        after verification.
+      </p>
+
+      <h2>Important</h2>
+      <p>
+        Account deletion is permanent. Once deletion is completed, your recordings, summaries, insights, and account data cannot be
+        restored.
+      </p>
+    </main>
+
+    <script>
+      const form = document.querySelector("#delete-account-form");
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const email = document.querySelector("#email").value.trim();
+        const details = document.querySelector("#details").value.trim();
+        const subject = encodeURIComponent("Delete my Echo AI account");
+        const body = encodeURIComponent(
+          [
+            "I want to permanently delete my Echo AI account and associated data.",
+            "",
+            `Account email: ${email || "(not provided)"}`,
+            `Additional details: ${details || "(not provided)"}`,
+            "",
+            "I understand this deletion is permanent."
+          ].join("\n")
+        );
+
+        window.location.href = `mailto:support@echoai.app?subject=${subject}&body=${body}`;
+      });
+    </script>
+  </body>
+</html>

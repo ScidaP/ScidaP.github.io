@@ -14,6 +14,7 @@ export default defineConfig({
         'glenn/auth/reset-password': resolve(__dirname, 'glenn/auth/reset-password/index.html'),
         'glenn/delete-account': resolve(__dirname, 'glenn/delete-account/index.html'),
         'glenn/privacy': resolve(__dirname, 'glenn/privacy/index.html'),
+        'glenn/terms': resolve(__dirname, 'glenn/terms/index.html'),
       },
     },
   },
