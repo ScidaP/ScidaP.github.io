@@ -52,7 +52,7 @@ export const deleteAccountApps = {
     functionName: 'echoai-delete-account',
     authRedirectUrl: 'https://scidap.github.io/echoai/delete-account/',
     providers: ['google'],
-    passwordAuthEnabled: true,
+    passwordAuthEnabled: false,
     magicLinkEnabled: false,
     retentionCopy:
       'Some minimal records may be retained temporarily for legal, anti-fraud, or operational integrity reasons.',
