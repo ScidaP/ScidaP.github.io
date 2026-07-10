@@ -41,6 +41,27 @@ export const deleteAccountApps = {
       'Records flagged in the database for deletion or anonymization will be deleted.',
     ],
   },
+  echoai: {
+    key: 'echoai',
+    name: 'Echo AI',
+    pageTitle: 'Echo AI — Delete Account',
+    logoSrc: null,
+    supportEmail: 'patricioscida@gmail.com',
+    supabaseUrl: 'https://zqlgvkkssljbubetitnq.supabase.co',
+    supabaseAnonKey: 'sb_publishable_OSrxw3_7TCk218oTaaa2qw_9XpmRxK0',
+    functionName: 'echoai-delete-account',
+    authRedirectUrl: 'https://scidap.github.io/echoai/delete-account/',
+    providers: ['google'],
+    passwordAuthEnabled: true,
+    magicLinkEnabled: false,
+    retentionCopy:
+      'Some minimal records may be retained temporarily for legal, anti-fraud, or operational integrity reasons.',
+    deletedData: [
+      'Your Supabase authentication account will be deleted.',
+      'Your Echo AI profile, voice entries, generated outputs, and related user data will be deleted according to the backend policy.',
+      'Records flagged in the database for deletion or anonymization will be deleted.',
+    ],
+  },
 }
 
 export function getDeleteAccountAppConfig(appKey) {

@@ -161,6 +161,7 @@ function LoginPanel({
   onProviderLogin,
   onMagicLinkSubmit,
   magicLinkEnabled,
+  anonymousSession,
 }) {
   return (
     <section className="surface-card">
@@ -169,6 +170,13 @@ function LoginPanel({
       <p className="muted-copy">
         To prevent impersonation, only the user authenticated through Supabase can request deletion of their own account.
       </p>
+
+      {anonymousSession ? (
+        <StatusBanner kind="info">
+          This is an anonymous guest session. Link it to Google or sign in with the account used by the app first;
+          anonymous sessions cannot be identified from this web page after the session is lost.
+        </StatusBanner>
+      ) : null}
 
       <div className="auth-grid">
         {providers.includes('google') ? (
@@ -307,7 +315,8 @@ export function DeleteAccountApp({ config }) {
     [config, isConfigured]
   )
 
-  const isAuthenticated = Boolean(session?.user)
+  const isAnonymousSession = Boolean(session?.user?.is_anonymous || session?.user?.app_metadata?.provider === 'anonymous')
+  const isAuthenticated = Boolean(session?.user) && !isAnonymousSession
   const currentEmail = useMemo(() => session?.user?.email || '', [session])
   const authRedirectUrl = useMemo(() => getAuthRedirectUrl(config), [config])
 
@@ -580,6 +589,7 @@ export function DeleteAccountApp({ config }) {
             onProviderLogin={handleProviderLogin}
             onMagicLinkSubmit={handleMagicLinkSubmit}
             magicLinkEnabled={config.magicLinkEnabled}
+            anonymousSession={isAnonymousSession}
           />
         )}
       </div>
