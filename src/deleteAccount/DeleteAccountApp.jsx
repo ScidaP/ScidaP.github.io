@@ -54,6 +54,12 @@ function createAuthToken() {
   return Array.from(randomBytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
 }
 
+async function sha256Hex(value) {
+  const encodedValue = new TextEncoder().encode(value)
+  const digest = await crypto.subtle.digest('SHA-256', encodedValue)
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
 function isAppleServiceIdConfigured(config) {
   return Boolean(config?.appleServiceId && !config.appleServiceId.includes('YOUR_'))
 }
@@ -471,6 +477,7 @@ export function DeleteAccountApp({ config }) {
       try {
         const AppleID = await loadAppleSignInScript()
         const nonce = createAuthToken()
+        const hashedNonce = await sha256Hex(nonce)
         const state = createAuthToken()
 
         AppleID.auth.init({
@@ -478,7 +485,7 @@ export function DeleteAccountApp({ config }) {
           scope: 'name email',
           redirectURI: config.appleRedirectUrl || authRedirectUrl,
           state,
-          nonce,
+          nonce: hashedNonce,
           usePopup: true,
         })
 
