@@ -52,6 +52,25 @@ function StatusBanner({ kind, children }) {
   return <div className={`status-banner ${kind}`}>{children}</div>
 }
 
+function GoogleIcon() {
+  return (
+    <svg className="provider-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z" />
+      <path fill="#34A853" d="M12 22c2.7 0 4.98-.9 6.63-2.36l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z" />
+      <path fill="#FBBC05" d="M6.39 13.93A6 6 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.63.39 3.17 1.04 4.55l3.35-2.62Z" />
+      <path fill="#EA4335" d="M12 5.94c1.47 0 2.79.5 3.83 1.5l2.87-2.88A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z" />
+    </svg>
+  )
+}
+
+function AppleIcon() {
+  return (
+    <svg className="provider-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M17.05 12.54c-.03-2.87 2.34-4.27 2.45-4.34a5.24 5.24 0 0 0-4.12-2.23c-1.73-.18-3.41 1.04-4.29 1.04-.9 0-2.26-1.02-3.73-.99a5.46 5.46 0 0 0-4.6 2.8c-1.99 3.45-.5 8.52 1.4 11.31.95 1.37 2.06 2.9 3.53 2.85 1.44-.06 1.98-.92 3.72-.92 1.72 0 2.23.92 3.73.89 1.55-.03 2.52-1.37 3.43-2.75a11.3 11.3 0 0 0 1.57-3.2 4.94 4.94 0 0 1-3.09-4.46ZM14.25 4.14A5.03 5.03 0 0 0 15.4.5a5.1 5.1 0 0 0-3.3 1.73 4.8 4.8 0 0 0-1.18 3.5 4.22 4.22 0 0 0 3.33-1.59Z" />
+    </svg>
+  )
+}
+
 function ConfigError({ config }) {
   return (
     <main className="delete-account-page">
@@ -180,12 +199,14 @@ function LoginPanel({
 
       <div className="auth-grid">
         {providers.includes('google') ? (
-          <button type="button" className="primary-button" onClick={() => onProviderLogin('google')} disabled={authLoading}>
+          <button type="button" className="primary-button provider-button google-button" onClick={() => onProviderLogin('google')} disabled={authLoading}>
+            <GoogleIcon />
             {authLoading ? 'Redirecting...' : 'Continue with Google'}
           </button>
         ) : null}
         {providers.includes('apple') ? (
-          <button type="button" className="secondary-button" onClick={() => onProviderLogin('apple')} disabled={authLoading}>
+          <button type="button" className="secondary-button provider-button apple-button" onClick={() => onProviderLogin('apple')} disabled={authLoading}>
+            <AppleIcon />
             {authLoading ? 'Redirecting...' : 'Continue with Apple'}
           </button>
         ) : null}

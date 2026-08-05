@@ -202,6 +202,32 @@ input { font: inherit; }
   transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
 }
 
+.provider-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.provider-icon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+}
+
+.primary-button.google-button {
+  color: #1f1f1f;
+  background: #fff;
+  border: 1px solid #dadce0;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
+}
+
+.secondary-button.apple-button {
+  color: #fff;
+  background: #000;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
 .primary-button:hover,
 .secondary-button:hover,
 .ghost-button:hover,
