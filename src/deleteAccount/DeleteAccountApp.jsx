@@ -1,6 +1,72 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 
+const APPLE_SIGN_IN_SCRIPT_URL = 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js'
+
+let appleSignInScriptPromise
+
+function loadAppleSignInScript() {
+  if (window.AppleID?.auth) {
+    return Promise.resolve(window.AppleID)
+  }
+
+  if (appleSignInScriptPromise) {
+    return appleSignInScriptPromise
+  }
+
+  appleSignInScriptPromise = new Promise((resolve, reject) => {
+    const existingScript = document.querySelector(`script[src="${APPLE_SIGN_IN_SCRIPT_URL}"]`)
+    const script = existingScript || document.createElement('script')
+
+    const handleLoad = () => {
+      if (window.AppleID?.auth) {
+        resolve(window.AppleID)
+      } else {
+        reject(new Error('Apple Sign In loaded without exposing its authentication API.'))
+      }
+    }
+
+    const handleError = () => {
+      appleSignInScriptPromise = undefined
+      reject(new Error('Apple Sign In could not be loaded. Check your connection and try again.'))
+    }
+
+    script.addEventListener('load', handleLoad, { once: true })
+    script.addEventListener('error', handleError, { once: true })
+
+    if (!existingScript) {
+      script.src = APPLE_SIGN_IN_SCRIPT_URL
+      script.async = true
+      script.defer = true
+      document.head.appendChild(script)
+    }
+  })
+
+  return appleSignInScriptPromise
+}
+
+function createAuthToken() {
+  if (typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+
+  const randomBytes = crypto.getRandomValues(new Uint8Array(32))
+  return Array.from(randomBytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
+function isAppleServiceIdConfigured(config) {
+  return Boolean(config?.appleServiceId && !config.appleServiceId.includes('YOUR_'))
+}
+
+function getAppleErrorMessage(error) {
+  const code = error?.error || error?.detail?.error
+  if (code === 'user_cancelled_authorize') {
+    return 'Apple sign-in was cancelled.'
+  }
+
+  return getFriendlyErrorMessage(error, 'Apple sign-in could not be completed.')
+}
+
 function getFriendlyErrorMessage(error, fallback) {
   const message = error?.message?.trim()
   if (!message) return fallback
@@ -391,6 +457,57 @@ export function DeleteAccountApp({ config }) {
   async function handleProviderLogin(provider) {
     setAuthLoading(true)
     setAuthMessage(null)
+
+    if (provider === 'apple') {
+      if (!isAppleServiceIdConfigured(config)) {
+        setAuthMessage({
+          kind: 'error',
+          text: 'Apple Sign In is not configured yet. Add the public Services ID to this page configuration.',
+        })
+        setAuthLoading(false)
+        return
+      }
+
+      try {
+        const AppleID = await loadAppleSignInScript()
+        const nonce = createAuthToken()
+        const state = createAuthToken()
+
+        AppleID.auth.init({
+          clientId: config.appleServiceId,
+          scope: 'name email',
+          redirectURI: config.appleRedirectUrl || authRedirectUrl,
+          state,
+          nonce,
+          usePopup: true,
+        })
+
+        const result = await AppleID.auth.signIn()
+        const authorization = result?.authorization
+
+        if (!authorization?.id_token) {
+          throw new Error('Apple did not return an identity token.')
+        }
+
+        if (authorization.state !== state) {
+          throw new Error('Apple returned an invalid authentication state. Please try again.')
+        }
+
+        const { error } = await supabase.auth.signInWithIdToken({
+          provider: 'apple',
+          token: authorization.id_token,
+          nonce,
+        })
+
+        if (error) throw error
+      } catch (error) {
+        setAuthMessage({ kind: 'error', text: getAppleErrorMessage(error) })
+      } finally {
+        setAuthLoading(false)
+      }
+
+      return
+    }
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,

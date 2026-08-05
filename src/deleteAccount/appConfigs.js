@@ -9,6 +9,8 @@ export const deleteAccountApps = {
     supabaseAnonKey: 'sb_publishable_uYwEIITVp7bRRoXgLRQTSw_u-4VGIZw',
     functionName: 'equrix-delete-account',
     authRedirectUrl: 'https://scidap.github.io/equrix/delete-account/',
+    appleServiceId: 'com.equrix.app.web',
+    appleRedirectUrl: 'https://scidap.github.io/equrix/delete-account/',
     providers: ['google', 'apple'],
     passwordAuthEnabled: false,
     magicLinkEnabled: false,
