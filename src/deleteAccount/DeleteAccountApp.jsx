@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 
 const APPLE_SIGN_IN_SCRIPT_URL = 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js'
@@ -70,7 +70,29 @@ function getAppleErrorMessage(error) {
     return 'Apple sign-in was cancelled.'
   }
 
+  if (typeof code === 'string' && code.trim()) {
+    return `Apple sign-in could not be completed (${code.trim()}).`
+  }
+
   return getFriendlyErrorMessage(error, 'Apple sign-in could not be completed.')
+}
+
+async function prepareAppleSignIn(config, authRedirectUrl) {
+  const AppleID = await loadAppleSignInScript()
+  const nonce = createAuthToken()
+  const hashedNonce = await sha256Hex(nonce)
+  const state = createAuthToken()
+
+  AppleID.auth.init({
+    clientId: config.appleServiceId,
+    scope: 'name email',
+    redirectURI: config.appleRedirectUrl || authRedirectUrl,
+    state,
+    nonce: hashedNonce,
+    usePopup: true,
+  })
+
+  return { AppleID, nonce, state }
 }
 
 function getFriendlyErrorMessage(error, fallback) {
@@ -253,6 +275,7 @@ function LoginPanel({
   onMagicLinkSubmit,
   magicLinkEnabled,
   anonymousSession,
+  appleSignInReady,
 }) {
   return (
     <section className="surface-card">
@@ -277,9 +300,9 @@ function LoginPanel({
           </button>
         ) : null}
         {providers.includes('apple') ? (
-          <button type="button" className="secondary-button provider-button apple-button" onClick={() => onProviderLogin('apple')} disabled={authLoading}>
+          <button type="button" className="secondary-button provider-button apple-button" onClick={() => onProviderLogin('apple')} disabled={authLoading || !appleSignInReady}>
             <AppleIcon />
-            {authLoading ? 'Redirecting...' : 'Continue with Apple'}
+            {authLoading ? 'Redirecting...' : appleSignInReady ? 'Continue with Apple' : 'Preparing Apple sign-in...'}
           </button>
         ) : null}
       </div>
@@ -395,6 +418,8 @@ export function DeleteAccountApp({ config }) {
   const [deleteError, setDeleteError] = useState('')
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [deletedEmail, setDeletedEmail] = useState('')
+  const [appleSignInReady, setAppleSignInReady] = useState(false)
+  const appleSignInRequest = useRef(null)
 
   const isConfigured = Boolean(
     config?.supabaseUrl &&
@@ -416,6 +441,31 @@ export function DeleteAccountApp({ config }) {
   useEffect(() => {
     document.title = config?.pageTitle || 'Delete Account'
   }, [config])
+
+  useEffect(() => {
+    if (!config?.providers?.includes('apple') || !isAppleServiceIdConfigured(config)) {
+      return undefined
+    }
+
+    let mounted = true
+    setAppleSignInReady(false)
+    appleSignInRequest.current = null
+
+    prepareAppleSignIn(config, authRedirectUrl)
+      .then((request) => {
+        if (!mounted) return
+        appleSignInRequest.current = request
+        setAppleSignInReady(true)
+      })
+      .catch((error) => {
+        if (!mounted) return
+        setAuthMessage({ kind: 'error', text: getAppleErrorMessage(error) })
+      })
+
+    return () => {
+      mounted = false
+    }
+  }, [authRedirectUrl, config])
 
   useEffect(() => {
     if (!supabase) return undefined
@@ -475,20 +525,14 @@ export function DeleteAccountApp({ config }) {
       }
 
       try {
-        const AppleID = await loadAppleSignInScript()
-        const nonce = createAuthToken()
-        const hashedNonce = await sha256Hex(nonce)
-        const state = createAuthToken()
+        const request = appleSignInRequest.current
+        if (!request) {
+          throw new Error('Apple Sign In is still loading. Please wait a moment and try again.')
+        }
 
-        AppleID.auth.init({
-          clientId: config.appleServiceId,
-          scope: 'name email',
-          redirectURI: config.appleRedirectUrl || authRedirectUrl,
-          state,
-          nonce: hashedNonce,
-          usePopup: true,
-        })
-
+        const { AppleID, nonce, state } = request
+        // This call must happen synchronously inside the click handler. Awaiting script
+        // loading or nonce hashing first causes mobile browsers to block the popup.
         const result = await AppleID.auth.signIn()
         const authorization = result?.authorization
 
@@ -500,6 +544,9 @@ export function DeleteAccountApp({ config }) {
           throw new Error('Apple returned an invalid authentication state. Please try again.')
         }
 
+        appleSignInRequest.current = null
+        setAppleSignInReady(false)
+
         const { error } = await supabase.auth.signInWithIdToken({
           provider: 'apple',
           token: authorization.id_token,
@@ -509,6 +556,14 @@ export function DeleteAccountApp({ config }) {
         if (error) throw error
       } catch (error) {
         setAuthMessage({ kind: 'error', text: getAppleErrorMessage(error) })
+
+        try {
+          const nextRequest = await prepareAppleSignIn(config, authRedirectUrl)
+          appleSignInRequest.current = nextRequest
+          setAppleSignInReady(true)
+        } catch (prepareError) {
+          setAuthMessage({ kind: 'error', text: getAppleErrorMessage(prepareError) })
+        }
       } finally {
         setAuthLoading(false)
       }
@@ -735,6 +790,7 @@ export function DeleteAccountApp({ config }) {
             onMagicLinkSubmit={handleMagicLinkSubmit}
             magicLinkEnabled={config.magicLinkEnabled}
             anonymousSession={isAnonymousSession}
+            appleSignInReady={appleSignInReady}
           />
         )}
       </div>
