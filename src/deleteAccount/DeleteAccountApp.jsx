@@ -1,5 +1,99 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
+
+const APPLE_SIGN_IN_SCRIPT_URL = 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js'
+
+let appleSignInScriptPromise
+
+function loadAppleSignInScript() {
+  if (window.AppleID?.auth) {
+    return Promise.resolve(window.AppleID)
+  }
+
+  if (appleSignInScriptPromise) {
+    return appleSignInScriptPromise
+  }
+
+  appleSignInScriptPromise = new Promise((resolve, reject) => {
+    const existingScript = document.querySelector(`script[src="${APPLE_SIGN_IN_SCRIPT_URL}"]`)
+    const script = existingScript || document.createElement('script')
+
+    const handleLoad = () => {
+      if (window.AppleID?.auth) {
+        resolve(window.AppleID)
+      } else {
+        reject(new Error('Apple Sign In loaded without exposing its authentication API.'))
+      }
+    }
+
+    const handleError = () => {
+      appleSignInScriptPromise = undefined
+      reject(new Error('Apple Sign In could not be loaded. Check your connection and try again.'))
+    }
+
+    script.addEventListener('load', handleLoad, { once: true })
+    script.addEventListener('error', handleError, { once: true })
+
+    if (!existingScript) {
+      script.src = APPLE_SIGN_IN_SCRIPT_URL
+      script.async = true
+      script.defer = true
+      document.head.appendChild(script)
+    }
+  })
+
+  return appleSignInScriptPromise
+}
+
+function createAuthToken() {
+  if (typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+
+  const randomBytes = crypto.getRandomValues(new Uint8Array(32))
+  return Array.from(randomBytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
+async function sha256Hex(value) {
+  const encodedValue = new TextEncoder().encode(value)
+  const digest = await crypto.subtle.digest('SHA-256', encodedValue)
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
+function isAppleServiceIdConfigured(config) {
+  return Boolean(config?.appleServiceId && !config.appleServiceId.includes('YOUR_'))
+}
+
+function getAppleErrorMessage(error) {
+  const code = error?.error || error?.detail?.error
+  if (code === 'user_cancelled_authorize') {
+    return 'Apple sign-in was cancelled.'
+  }
+
+  if (typeof code === 'string' && code.trim()) {
+    return `Apple sign-in could not be completed (${code.trim()}).`
+  }
+
+  return getFriendlyErrorMessage(error, 'Apple sign-in could not be completed.')
+}
+
+async function prepareAppleSignIn(config, authRedirectUrl) {
+  const AppleID = await loadAppleSignInScript()
+  const nonce = createAuthToken()
+  const hashedNonce = await sha256Hex(nonce)
+  const state = createAuthToken()
+
+  AppleID.auth.init({
+    clientId: config.appleServiceId,
+    scope: 'name email',
+    redirectURI: config.appleRedirectUrl || authRedirectUrl,
+    state,
+    nonce: hashedNonce,
+    usePopup: true,
+  })
+
+  return { AppleID, nonce, state }
+}
 
 function getFriendlyErrorMessage(error, fallback) {
   const message = error?.message?.trim()
@@ -181,6 +275,7 @@ function LoginPanel({
   onMagicLinkSubmit,
   magicLinkEnabled,
   anonymousSession,
+  appleSignInReady,
 }) {
   return (
     <section className="surface-card">
@@ -205,9 +300,9 @@ function LoginPanel({
           </button>
         ) : null}
         {providers.includes('apple') ? (
-          <button type="button" className="secondary-button provider-button apple-button" onClick={() => onProviderLogin('apple')} disabled={authLoading}>
+          <button type="button" className="secondary-button provider-button apple-button" onClick={() => onProviderLogin('apple')} disabled={authLoading || !appleSignInReady}>
             <AppleIcon />
-            {authLoading ? 'Redirecting...' : 'Continue with Apple'}
+            {authLoading ? 'Redirecting...' : appleSignInReady ? 'Continue with Apple' : 'Preparing Apple sign-in...'}
           </button>
         ) : null}
       </div>
@@ -323,6 +418,8 @@ export function DeleteAccountApp({ config }) {
   const [deleteError, setDeleteError] = useState('')
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [deletedEmail, setDeletedEmail] = useState('')
+  const [appleSignInReady, setAppleSignInReady] = useState(false)
+  const appleSignInRequest = useRef(null)
 
   const isConfigured = Boolean(
     config?.supabaseUrl &&
@@ -344,6 +441,31 @@ export function DeleteAccountApp({ config }) {
   useEffect(() => {
     document.title = config?.pageTitle || 'Delete Account'
   }, [config])
+
+  useEffect(() => {
+    if (!config?.providers?.includes('apple') || !isAppleServiceIdConfigured(config)) {
+      return undefined
+    }
+
+    let mounted = true
+    setAppleSignInReady(false)
+    appleSignInRequest.current = null
+
+    prepareAppleSignIn(config, authRedirectUrl)
+      .then((request) => {
+        if (!mounted) return
+        appleSignInRequest.current = request
+        setAppleSignInReady(true)
+      })
+      .catch((error) => {
+        if (!mounted) return
+        setAuthMessage({ kind: 'error', text: getAppleErrorMessage(error) })
+      })
+
+    return () => {
+      mounted = false
+    }
+  }, [authRedirectUrl, config])
 
   useEffect(() => {
     if (!supabase) return undefined
@@ -391,6 +513,63 @@ export function DeleteAccountApp({ config }) {
   async function handleProviderLogin(provider) {
     setAuthLoading(true)
     setAuthMessage(null)
+
+    if (provider === 'apple') {
+      if (!isAppleServiceIdConfigured(config)) {
+        setAuthMessage({
+          kind: 'error',
+          text: 'Apple Sign In is not configured yet. Add the public Services ID to this page configuration.',
+        })
+        setAuthLoading(false)
+        return
+      }
+
+      try {
+        const request = appleSignInRequest.current
+        if (!request) {
+          throw new Error('Apple Sign In is still loading. Please wait a moment and try again.')
+        }
+
+        const { AppleID, nonce, state } = request
+        // This call must happen synchronously inside the click handler. Awaiting script
+        // loading or nonce hashing first causes mobile browsers to block the popup.
+        const result = await AppleID.auth.signIn()
+        const authorization = result?.authorization
+
+        if (!authorization?.id_token) {
+          throw new Error('Apple did not return an identity token.')
+        }
+
+        if (authorization.state !== state) {
+          throw new Error('Apple returned an invalid authentication state. Please try again.')
+        }
+
+        appleSignInRequest.current = null
+        setAppleSignInReady(false)
+
+        const { error } = await supabase.auth.signInWithIdToken({
+          provider: 'apple',
+          token: authorization.id_token,
+          nonce,
+        })
+
+        if (error) throw error
+      } catch (error) {
+        setAuthMessage({ kind: 'error', text: getAppleErrorMessage(error) })
+
+        try {
+          const nextRequest = await prepareAppleSignIn(config, authRedirectUrl)
+          appleSignInRequest.current = nextRequest
+          setAppleSignInReady(true)
+        } catch (prepareError) {
+          setAuthMessage({ kind: 'error', text: getAppleErrorMessage(prepareError) })
+        }
+      } finally {
+        setAuthLoading(false)
+      }
+
+      return
+    }
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -611,6 +790,7 @@ export function DeleteAccountApp({ config }) {
             onMagicLinkSubmit={handleMagicLinkSubmit}
             magicLinkEnabled={config.magicLinkEnabled}
             anonymousSession={isAnonymousSession}
+            appleSignInReady={appleSignInReady}
           />
         )}
       </div>
