@@ -19,17 +19,27 @@ body,
   margin: 0;
 }
 
-body { min-height: 100vh; }
+html { overflow-x: hidden; }
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+  -webkit-text-size-adjust: 100%;
+}
 
 a { color: #1d4ed8; }
 
 button,
 input { font: inherit; }
 
+button { touch-action: manipulation; }
+
 .delete-account-page {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 32px 20px 64px;
+  padding: max(32px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(64px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
 }
 
 .hero-card,
@@ -194,12 +204,24 @@ input { font: inherit; }
 .secondary-button,
 .ghost-button,
 .danger-button {
+  min-height: 48px;
   border: 0;
   border-radius: 14px;
   padding: 14px 18px;
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.button-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .provider-button {
@@ -252,6 +274,20 @@ input { font: inherit; }
   border: 1px solid rgba(148, 163, 184, 0.4);
 }
 
+.sign-out-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: #334155;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
 .danger-button {
   background: linear-gradient(135deg, #dc2626, #b91c1c);
   color: #fff;
@@ -268,6 +304,13 @@ button:disabled {
   opacity: 0.7;
   transform: none;
   box-shadow: none;
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.28);
+  outline-offset: 3px;
 }
 
 .card-header {
@@ -329,12 +372,16 @@ button:disabled {
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
   background: rgba(15, 23, 42, 0.55);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .modal-card {
   width: min(100%, 560px);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
   padding: 28px;
 }
 
@@ -348,15 +395,69 @@ button:disabled {
   }
 
   .card-header { flex-direction: column; }
+
+  .card-header > div { width: 100%; }
+
+  .sign-out-button {
+    width: 100%;
+    border-radius: 14px;
+    background: #f1f5f9;
+    box-shadow: none;
+  }
 }
 
 @media (max-width: 640px) {
-  .delete-account-page { padding: 20px 14px 40px; }
+  .delete-account-page {
+    padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  }
 
   .hero-card,
   .surface-card,
   .modal-card {
-    border-radius: 20px;
-    padding: 22px;
+    border-radius: 18px;
+    padding: 20px;
+  }
+
+  .hero-card { gap: 20px; }
+
+  .hero-copy h1 { font-size: clamp(1.75rem, 9vw, 2.35rem); }
+
+  .surface-card h2,
+  .modal-card h2 { font-size: 1.35rem; }
+
+  .app-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+  }
+
+  .field input {
+    width: 100%;
+    min-width: 0;
+    font-size: 16px;
+  }
+
+  .modal-backdrop {
+    place-items: end center;
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  }
+
+  .modal-card {
+    max-height: calc(100dvh - 24px);
+  }
+
+  .modal-actions button,
+  .magic-link-form button,
+  .auth-grid button { width: 100%; }
+}
+
+@media (max-width: 380px) {
+  .hero-card,
+  .surface-card,
+  .modal-card { padding: 18px 16px; }
+
+  .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
   }
 }

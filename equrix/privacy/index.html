@@ -12,6 +12,11 @@
       color: #1a1a1a;
       background: #fafafa;
       padding: 2rem 1rem;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      overflow-wrap: anywhere;
+      -webkit-text-size-adjust: 100%;
     }
     .container {
       max-width: 720px;
@@ -48,7 +53,22 @@
     }
     li { margin-bottom: 0.3rem; }
     a { color: #2563eb; }
+    a:focus-visible { outline: 3px solid rgba(37, 99, 235, 0.25); outline-offset: 3px; }
     .contact { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #eee; }
+    @media (max-width: 600px) {
+      body {
+        padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+        line-height: 1.65;
+      }
+      .container {
+        border-radius: 10px;
+        padding: 1.5rem 1.1rem;
+      }
+      h1 { font-size: clamp(1.55rem, 8vw, 1.8rem); line-height: 1.15; }
+      h2 { scroll-margin-top: 1rem; }
+      p, li { font-size: 1rem; }
+      ul { padding-left: 1.25rem; }
+    }
   </style>
 </head>
 <body>

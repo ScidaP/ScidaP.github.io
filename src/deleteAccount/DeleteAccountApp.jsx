@@ -235,8 +235,11 @@ function AccountPanel({ session, onDeleteClick, onSignOut, deleteLoading, delete
           <span className="eyebrow">Authenticated session</span>
           <h2>Account ready for deletion</h2>
         </div>
-        <button type="button" className="ghost-button" onClick={onSignOut} disabled={deleteLoading}>
-          Sign out
+        <button type="button" className="ghost-button sign-out-button" onClick={onSignOut} disabled={deleteLoading}>
+          <svg className="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10 17l5-5-5-5M15 12H3M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5" />
+          </svg>
+          <span>Sign out</span>
         </button>
       </div>
 
