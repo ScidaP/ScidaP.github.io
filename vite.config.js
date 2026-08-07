@@ -10,6 +10,8 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         'equrix/delete-account': resolve(__dirname, 'equrix/delete-account/index.html'),
         'equrix/privacy': resolve(__dirname, 'equrix/privacy/index.html'),
+        'equrix/support': resolve(__dirname, 'equrix/support/index.html'),
+        'equrix/terms': resolve(__dirname, 'equrix/terms/index.html'),
         'echoai/delete-account': resolve(__dirname, 'echoai/delete-account/index.html'),
         'echoai/privacy': resolve(__dirname, 'echoai/privacy/index.html'),
         'echoai/terms': resolve(__dirname, 'echoai/terms/index.html'),
